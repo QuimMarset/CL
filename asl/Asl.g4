@@ -53,8 +53,6 @@ variable_decl
         : VAR ID (',' ID)* ':' type
         ;
 
-// Esto tira?
-
 type    
         : INT
         | FLOAT

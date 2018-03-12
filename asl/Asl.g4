@@ -77,7 +77,7 @@ statement
         : left_expr ASSIGN expr ';'                             # assignStmt
         | IF expr THEN statements (ELSE statements)? ENDIF      # ifStmt
         | WHILE expr DO statements ENDWHILE                     # whileStmt
-        | ident '(' paramsCall ')'  ';'                                      # procCall
+        | functionCall  ';'                                     # procCall
         | READ left_expr ';'                                    # readStmt
         | WRITE expr ';'                                        # writeExpr
         | WRITE STRING ';'                                      # writeString
@@ -93,7 +93,7 @@ expr
         | expr OR expr                                          # orExpr
         | '(' expr ')'                                          # subExpr
         | value                                                 # valueExpr
-        | ident '(' paramsCall? ')'                             # procCallExpr
+        | functionCall                                          # procCallExpr
         | ident                                                 # identExpr
         ;
 

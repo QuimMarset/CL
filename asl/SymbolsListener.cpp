@@ -86,7 +86,7 @@ void SymbolsListener::exitFunction(AslParser::FunctionContext *ctx) {
   }
   else {
     std::vector<TypesMgr::TypeId> lParamsTy;
-    for (unsigned int i = 0;i < ctx->params()->types(); ++i) {
+    for (unsigned int i = 0;i < ctx->params()->types().size(); ++i) {
         lParamsTy.push_back(getTypeDecor(ctx->params()->types(i)));
     }
     TypesMgr::TypeId tRet = getTypeDecor(ctx->type());
@@ -94,6 +94,25 @@ void SymbolsListener::exitFunction(AslParser::FunctionContext *ctx) {
     Symbols.addFunction(ident, tFunc);
   }
   DEBUG_EXIT();
+}
+
+void SymbolsListener::enterParams(AslParser::ParamsContext *ctx) {
+    DEBUG_ENTER();
+}
+void SymbolsListener::enterParams(AslParser::ParamsContext *ctx) {
+    std::string ident;
+    TypesMgr::TypeId t;
+    for (unsigned int i = 0;i < ctx->ID().size(); ++i) {
+        ident = ctx->ID(i)->getText();
+        if (Symbols.findInCurrentScope(ident)) {
+            Errors.declaredIdent(ctx->ID(i));
+        }
+        else {
+            t = getTypeDecor(ctx->type(i));
+            Symbols.addParameter(ident, t);
+        }
+    }
+    DEBUG_EXIT();
 }
 
 void SymbolsListener::enterDeclarations(AslParser::DeclarationsContext *ctx) {
@@ -107,14 +126,17 @@ void SymbolsListener::enterVariable_decl(AslParser::Variable_declContext *ctx) {
   DEBUG_ENTER();
 }
 void SymbolsListener::exitVariable_decl(AslParser::Variable_declContext *ctx) {
-  std::string ident = ctx->ID()->getText();
-  if (Symbols.findInCurrentScope(ident)) {
-    Errors.declaredIdent(ctx->ID());
-  }
-  else {
-    TypesMgr::TypeId t1 = getTypeDecor(ctx->type());
-    Symbols.addLocalVar(ident, t1);
-  }
+    TypesMgr::TypeId t = getTypeDecor(ctx->type());
+    std::string ident;
+    for (unisgned int i = 0;i < ctx->ID().size();++i) {
+        ident = ctx->ID(i)->getText();
+        if (Symbols.findInCurrentScope(ident)) {
+            Errors.declaredIdent(ctx->ID(i));
+        }
+        else {
+            Symbols.addLocalVar(ident, t);
+        }
+    }
   DEBUG_EXIT();
 }
 
@@ -214,61 +236,21 @@ void SymbolsListener::exitLeft_expr(AslParser::Left_exprContext *ctx) {
   DEBUG_EXIT();
 }
 
-void TypeCheckListener::enterUnaryExpr(AslParser::UnaryExprContext *ctx) {
+
+void SymbolsListener::enterSubExpr(AslParser::SubExprContext *ctx) {
   DEBUG_ENTER();
 }
-void TypeCheckListener::exitUnaryExpr(AslParser::UnaryExprContext *ctx) {
-
+void SymbolsListener::exitSubExpr(AslParser::SubExprContext *ctx) {
+    DEBUG_EXIT();
 }
 
-void TypeCheckListener::enterMulModDivExpr(AslParser::MulModDivExprContext *ctx) {
+void SymbolsListener::enterValueExpr(AslParser::ValueExprContext *ctx) {
   DEBUG_ENTER();
 }
-void TypeCheckListener::exitMulModDivExpr(AslParser::MulModDivExprContext *ctx) {
-
-}
-
-void TypeCheckListener::enterPlusMinusExpr(AslParser::PlusMinusExprContext *ctx) {
-  DEBUG_ENTER();
-}
-void TypeCheckListener::exitPlusMinusExpr(AslParser::PlusMinusExprContext *ctx) {
+void SymbolsListener::exitValueExpr(AslParser::ValueExprContext *ctx) {
   DEBUG_EXIT();
 }
 
-void TypeCheckListener::enterRelationalExpr(AslParser::RelationalExprContext *ctx) {
-  DEBUG_ENTER();
-}
-void TypeCheckListener::exitRelationalExpr(AslParser::RelationalExprContext *ctx) {
-  DEBUG_EXIT();
-}
-
-void TypeCheckListener::enterAndExpr(AslParser::AndExprContext *ctx) {
-  DEBUG_ENTER();
-}
-void TypeCheckListener::exitAndExpr(AslParser::AndExprContext *ctx) {
-  DEBUG_EXIT();
-}
-
-void TypeCheckListener::enterOrExpr(AslParser::OrExprContext *ctx) {
-  DEBUG_ENTER();
-}
-void TypeCheckListener::exitOrExpr(AslParser::OrExprContext *ctx) {
-
-}
-
-void TypeCheckListener::enterSubExpr(AslParser::SubExprContext *ctx) {
-  DEBUG_ENTER();
-}
-void TypeCheckListener::exitSubExpr(AslParser::SubExprContext *ctx) {
-
-}
-
-void TypeCheckListener::enterValueExpr(AslParser::ValueExprContext *ctx) {
-  DEBUG_ENTER();
-}
-void TypeCheckListener::exitValueExpr(AslParser::ValueExprContext *ctx) {
-  DEBUG_EXIT();
-}
 
 void SymbolsListener::enterExprIdent(AslParser::ExprIdentContext *ctx) {
   DEBUG_ENTER();
@@ -277,14 +259,19 @@ void SymbolsListener::exitExprIdent(AslParser::ExprIdentContext *ctx) {
   DEBUG_EXIT();
 }
 
-void SymbolsListener::enterValue(AslParser::ValueContext *ctx) {
-  DEBUG_ENTER();
+void SymbolListener::enterLeft_expr(AslParser::Left_exprContext *ctx) {
+    DEBUG_ENTER();
 }
-void SymbolsListener::exitValue(AslParser::ValueContext *ctx) {
-  DEBUG_EXIT();
+void SymbolListener::exitLeft_expr(AslParser::Left_exprContext *ctx) {
+    DEBUG_EXIT();
 }
 
-
+void SymbolsListenerenter::enterArray(AslParser::ArrayContext *ctx) {
+    DEBUG_ENTER();
+}
+void SymbolsListener::exitArray(AslParser::ArrayContext *ctx) {
+    DEBUG_EXIT();
+}
 
 void SymbolsListener::enterIdent(AslParser::IdentContext *ctx) {
   DEBUG_ENTER();

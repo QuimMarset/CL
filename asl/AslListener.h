@@ -71,29 +71,20 @@ public:
   virtual void enterProcCallExpr(AslParser::ProcCallExprContext *ctx) = 0;
   virtual void exitProcCallExpr(AslParser::ProcCallExprContext *ctx) = 0;
 
-  virtual void enterUnaryExpr(AslParser::UnaryExprContext *ctx) = 0;
-  virtual void exitUnaryExpr(AslParser::UnaryExprContext *ctx) = 0;
-
   virtual void enterValueExpr(AslParser::ValueExprContext *ctx) = 0;
   virtual void exitValueExpr(AslParser::ValueExprContext *ctx) = 0;
 
-  virtual void enterPlusMinusExpr(AslParser::PlusMinusExprContext *ctx) = 0;
-  virtual void exitPlusMinusExpr(AslParser::PlusMinusExprContext *ctx) = 0;
+  virtual void enterBooleanExpr(AslParser::BooleanExprContext *ctx) = 0;
+  virtual void exitBooleanExpr(AslParser::BooleanExprContext *ctx) = 0;
 
-  virtual void enterOrExpr(AslParser::OrExprContext *ctx) = 0;
-  virtual void exitOrExpr(AslParser::OrExprContext *ctx) = 0;
-
-  virtual void enterMulModDivExpr(AslParser::MulModDivExprContext *ctx) = 0;
-  virtual void exitMulModDivExpr(AslParser::MulModDivExprContext *ctx) = 0;
+  virtual void enterArithmeticExpr(AslParser::ArithmeticExprContext *ctx) = 0;
+  virtual void exitArithmeticExpr(AslParser::ArithmeticExprContext *ctx) = 0;
 
   virtual void enterSubExpr(AslParser::SubExprContext *ctx) = 0;
   virtual void exitSubExpr(AslParser::SubExprContext *ctx) = 0;
 
   virtual void enterRelationalExpr(AslParser::RelationalExprContext *ctx) = 0;
   virtual void exitRelationalExpr(AslParser::RelationalExprContext *ctx) = 0;
-
-  virtual void enterAndExpr(AslParser::AndExprContext *ctx) = 0;
-  virtual void exitAndExpr(AslParser::AndExprContext *ctx) = 0;
 
   virtual void enterValue(AslParser::ValueContext *ctx) = 0;
   virtual void exitValue(AslParser::ValueContext *ctx) = 0;

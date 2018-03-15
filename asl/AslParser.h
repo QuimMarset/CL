@@ -328,19 +328,6 @@ public:
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
-  class  UnaryExprContext : public ExprContext {
-  public:
-    UnaryExprContext(ExprContext *ctx);
-
-    antlr4::Token *op = nullptr;
-    ExprContext *expr();
-    antlr4::tree::TerminalNode *NOT();
-    antlr4::tree::TerminalNode *MINUS();
-    antlr4::tree::TerminalNode *PLUS();
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-  };
-
   class  ValueExprContext : public ExprContext {
   public:
     ValueExprContext(ExprContext *ctx);
@@ -350,37 +337,28 @@ public:
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
-  class  PlusMinusExprContext : public ExprContext {
+  class  BooleanExprContext : public ExprContext {
   public:
-    PlusMinusExprContext(ExprContext *ctx);
+    BooleanExprContext(ExprContext *ctx);
 
-    antlr4::Token *op = nullptr;
+    antlr4::tree::TerminalNode *NOT();
     std::vector<ExprContext *> expr();
     ExprContext* expr(size_t i);
-    antlr4::tree::TerminalNode *PLUS();
-    antlr4::tree::TerminalNode *MINUS();
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-  };
-
-  class  OrExprContext : public ExprContext {
-  public:
-    OrExprContext(ExprContext *ctx);
-
-    std::vector<ExprContext *> expr();
-    ExprContext* expr(size_t i);
+    antlr4::tree::TerminalNode *AND();
     antlr4::tree::TerminalNode *OR();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
-  class  MulModDivExprContext : public ExprContext {
+  class  ArithmeticExprContext : public ExprContext {
   public:
-    MulModDivExprContext(ExprContext *ctx);
+    ArithmeticExprContext(ExprContext *ctx);
 
     antlr4::Token *op = nullptr;
     std::vector<ExprContext *> expr();
     ExprContext* expr(size_t i);
+    antlr4::tree::TerminalNode *MINUS();
+    antlr4::tree::TerminalNode *PLUS();
     antlr4::tree::TerminalNode *MUL();
     antlr4::tree::TerminalNode *DIV();
     antlr4::tree::TerminalNode *MOD();
@@ -410,17 +388,6 @@ public:
     antlr4::tree::TerminalNode *LT();
     antlr4::tree::TerminalNode *LET();
     antlr4::tree::TerminalNode *GET();
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-  };
-
-  class  AndExprContext : public ExprContext {
-  public:
-    AndExprContext(ExprContext *ctx);
-
-    std::vector<ExprContext *> expr();
-    ExprContext* expr(size_t i);
-    antlr4::tree::TerminalNode *AND();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };

@@ -73,29 +73,20 @@ public:
   virtual void enterProcCallExpr(AslParser::ProcCallExprContext * /*ctx*/) override { }
   virtual void exitProcCallExpr(AslParser::ProcCallExprContext * /*ctx*/) override { }
 
-  virtual void enterUnaryExpr(AslParser::UnaryExprContext * /*ctx*/) override { }
-  virtual void exitUnaryExpr(AslParser::UnaryExprContext * /*ctx*/) override { }
-
   virtual void enterValueExpr(AslParser::ValueExprContext * /*ctx*/) override { }
   virtual void exitValueExpr(AslParser::ValueExprContext * /*ctx*/) override { }
 
-  virtual void enterPlusMinusExpr(AslParser::PlusMinusExprContext * /*ctx*/) override { }
-  virtual void exitPlusMinusExpr(AslParser::PlusMinusExprContext * /*ctx*/) override { }
+  virtual void enterBooleanExpr(AslParser::BooleanExprContext * /*ctx*/) override { }
+  virtual void exitBooleanExpr(AslParser::BooleanExprContext * /*ctx*/) override { }
 
-  virtual void enterOrExpr(AslParser::OrExprContext * /*ctx*/) override { }
-  virtual void exitOrExpr(AslParser::OrExprContext * /*ctx*/) override { }
-
-  virtual void enterMulModDivExpr(AslParser::MulModDivExprContext * /*ctx*/) override { }
-  virtual void exitMulModDivExpr(AslParser::MulModDivExprContext * /*ctx*/) override { }
+  virtual void enterArithmeticExpr(AslParser::ArithmeticExprContext * /*ctx*/) override { }
+  virtual void exitArithmeticExpr(AslParser::ArithmeticExprContext * /*ctx*/) override { }
 
   virtual void enterSubExpr(AslParser::SubExprContext * /*ctx*/) override { }
   virtual void exitSubExpr(AslParser::SubExprContext * /*ctx*/) override { }
 
   virtual void enterRelationalExpr(AslParser::RelationalExprContext * /*ctx*/) override { }
   virtual void exitRelationalExpr(AslParser::RelationalExprContext * /*ctx*/) override { }
-
-  virtual void enterAndExpr(AslParser::AndExprContext * /*ctx*/) override { }
-  virtual void exitAndExpr(AslParser::AndExprContext * /*ctx*/) override { }
 
   virtual void enterValue(AslParser::ValueContext * /*ctx*/) override { }
   virtual void exitValue(AslParser::ValueContext * /*ctx*/) override { }

@@ -85,12 +85,13 @@ statement
         ;
 
 expr    
-        : op=(NOT | MINUS | PLUS) expr                          # unaryExpr
-        | expr op=(MUL | DIV | MOD) expr                        # mulModDivExpr
-        | expr op=(PLUS | MINUS) expr                           # plusMinusExpr
+        : op=(MINUS | PLUS) expr                                # arithmeticExpr
+        | expr op=(MUL | DIV | MOD) expr                        # arithmeticExpr
+        | expr op=(PLUS | MINUS) expr                           # arithmeticExpr
         | expr op=(EQ | NEQ | GT | LT | LET | GET) expr         # relationalExpr
-        | expr AND expr                                         # andExpr
-        | expr OR expr                                          # orExpr
+        | NOT expr                                              # booleanExpr
+        | expr AND expr                                         # booleanExpr
+        | expr OR expr                                          # booleanExpr
         | '(' expr ')'                                          # subExpr
         | value                                                 # valueExpr
         | functionCall                                          # procCallExpr

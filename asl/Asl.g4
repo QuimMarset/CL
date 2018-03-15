@@ -113,8 +113,7 @@ ident
         ;
 
 array   
-        : ARRAY '[' INTVAL ']' OF 
-            ty=(INT | BOOL | CHAR | FLOAT)
+        : ARRAY '[' INTVAL ']' OF type
         ;
 
 //////////////////////////////////////////////////

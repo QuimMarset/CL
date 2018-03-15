@@ -211,8 +211,7 @@ public:
   public:
     ProcCallContext(StatementContext *ctx);
 
-    IdentContext *ident();
-    ParamsCallContext *paramsCall();
+    FunctionCallContext *functionCall();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
@@ -324,8 +323,7 @@ public:
   public:
     ProcCallExprContext(ExprContext *ctx);
 
-    IdentContext *ident();
-    ParamsCallContext *paramsCall();
+    FunctionCallContext *functionCall();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
@@ -474,16 +472,12 @@ public:
 
   class  ArrayContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *ty = nullptr;;
     ArrayContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *ARRAY();
     antlr4::tree::TerminalNode *INTVAL();
     antlr4::tree::TerminalNode *OF();
-    antlr4::tree::TerminalNode *INT();
-    antlr4::tree::TerminalNode *BOOL();
-    antlr4::tree::TerminalNode *CHAR();
-    antlr4::tree::TerminalNode *FLOAT();
+    TypeContext *type();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

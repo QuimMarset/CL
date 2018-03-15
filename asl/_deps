@@ -1428,7 +1428,8 @@ main.o: main.cpp /usr/local/include/antlr4-runtime/antlr4-runtime.h \
  /usr/local/include/antlr4-runtime/tree/xpath/XPathWildcardElement.h \
  AslLexer.h AslParser.h ../common/TypesMgr.h ../common/SymTable.h \
  ../common/TreeDecoration.h ../common/code.h ../common/SemErrors.h \
- SymbolsListener.h AslBaseListener.h AslListener.h TypeCheckListener.h
+ SymbolsListener.h AslBaseListener.h AslListener.h TypeCheckListener.h \
+ CodeGenListener.h
 AslListener.o: AslListener.cpp AslListener.h \
  /usr/local/include/antlr4-runtime/antlr4-runtime.h \
  /usr/local/include/antlr4-runtime/antlr4-common.h \

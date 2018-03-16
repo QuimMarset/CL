@@ -90,7 +90,7 @@ void SymbolsListener::exitFunction(AslParser::FunctionContext *ctx) {
             lParamsTy.push_back(getTypeDecor(ctx->params()->type(i)));
         }   
     }
-    TypesMgr::TypeId tRet;
+    TypesMgr::TypeId tRet = Types.createVoidTy();
     if (ctx->type()) {
         tRet = getTypeDecor(ctx->type());
     }

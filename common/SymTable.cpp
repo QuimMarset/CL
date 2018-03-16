@@ -199,7 +199,7 @@ bool SymTable::noMainProperlyDeclared() const {
   ScopeId currScope = ScopeIdsStack.back();
   assert(currScope < ScopesVec.size());
   if ((not ScopesVec[currScope].findSymbol("main")) or
-      (not ScopesVec[currScope].isFunctionClass("main")))
+      (not ScopesVec[currScope].isFunctionClass("main"))) 
     return true;
   TypesMgr::TypeId tid = ScopesVec[currScope].getType("main");
   if (Types.isFunctionTy(tid) and

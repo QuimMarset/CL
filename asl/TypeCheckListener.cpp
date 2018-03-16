@@ -63,10 +63,11 @@ void TypeCheckListener::enterProgram(AslParser::ProgramContext *ctx) {
   Symbols.pushThisScope(sc);
 }
 void TypeCheckListener::exitProgram(AslParser::ProgramContext *ctx) {
-  if (Symbols.noMainProperlyDeclared())
-    Errors.noMainProperlyDeclared(ctx);
-  Symbols.popScope();
-  DEBUG_EXIT();
+    if (Symbols.noMainProperlyDeclared())
+        Errors.noMainProperlyDeclared(ctx);
+    Symbols.popScope();
+    Errors.print();
+    DEBUG_EXIT();
 }
 
 void TypeCheckListener::enterFunction(AslParser::FunctionContext *ctx) {
@@ -77,11 +78,6 @@ void TypeCheckListener::enterFunction(AslParser::FunctionContext *ctx) {
 }
 void TypeCheckListener::exitFunction(AslParser::FunctionContext *ctx) {
   Symbols.popScope();
-  std::string ident = ctx->ID()->getText();
-  TypesMgr::TypeId returnType = Types.getFuncReturnType(Symbols.getType(ident));
-  if (Types.isArrayTy(returnType)) {
-
-  }
   DEBUG_EXIT();
 }
 
@@ -130,12 +126,8 @@ void TypeCheckListener::exitAssignStmt(AslParser::AssignStmtContext *ctx) {
         (not Types.copyableTypes(t1, t2))) {
         Errors.incompatibleAssignment(ctx->ASSIGN());
     }
-    
     if ((not Types.isErrorTy(t1)) and (not getIsLValueDecor(ctx->left_expr()))) {
         Errors.nonReferenceableLeftExpr(ctx->left_expr());
-    }
-    if (not Types.isErrorTy(t1) and (ctx->left_expr()->ident()->expr() and not Types.isArrayTy(t1))) {
-        Errors.nonArrayInArrayAccess(ctx);
     }
     DEBUG_EXIT();
 }
@@ -239,7 +231,7 @@ void TypeCheckListener::exitUnaryArithmeticExpr(AslParser::UnaryArithmeticExprCo
         t = Types.createErrorTy();
     }
     else if (Types.isErrorTy(t1)) {
-        t = Types.createErrorTy();
+        t = t1;
     }
     else {
         if (Types.isFloatTy(t1)) {
@@ -317,7 +309,7 @@ void TypeCheckListener::exitUnaryBooleanExpr(AslParser::UnaryBooleanExprContext 
         t = Types.createErrorTy();
     }
     else if (Types.isErrorTy(t1)) {
-        t = Types.createErrorTy();
+        t = t1;
     }
     else {
         t = Types.createBooleanTy();
@@ -382,8 +374,8 @@ void TypeCheckListener::exitProcCallExpr(AslParser::ProcCallExprContext *ctx) {
       t1 = Types.createErrorTy();
   }
   putTypeDecor(ctx, t1);
-  bool b = getIsLValueDecor(ctx->functionCall());
-  putIsLValueDecor(ctx, b);
+  //bool b = getIsLValueDecor(ctx->functionCall());
+  putIsLValueDecor(ctx, false);
   DEBUG_EXIT();
 }
 
@@ -392,10 +384,6 @@ void TypeCheckListener::enterIdentExpr(AslParser::IdentExprContext *ctx) {
 }
 void TypeCheckListener::exitIdentExpr(AslParser::IdentExprContext *ctx) {
   TypesMgr::TypeId t1 = getTypeDecor(ctx->ident());
-  if (not Types.isErrorTy(t1) and not getIsLValueDecor(ctx->ident())) {
-      Errors.nonReferenceableExpression(ctx);
-      t1 = Types.createErrorTy();
-  }
   putTypeDecor(ctx, t1);
   bool b = getIsLValueDecor(ctx->ident());
   putIsLValueDecor(ctx, b);

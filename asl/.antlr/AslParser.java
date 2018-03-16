@@ -816,6 +816,22 @@ public class AslParser extends Parser {
 		}
 		public IdentExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
+	public static class UnaryArithmeticExprContext extends ExprContext {
+		public Token op;
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode MINUS() { return getToken(AslParser.MINUS, 0); }
+		public TerminalNode PLUS() { return getToken(AslParser.PLUS, 0); }
+		public UnaryArithmeticExprContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	public static class UnaryBooleanExprContext extends ExprContext {
+		public TerminalNode NOT() { return getToken(AslParser.NOT, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public UnaryBooleanExprContext(ExprContext ctx) { copyFrom(ctx); }
+	}
 	public static class ProcCallExprContext extends ExprContext {
 		public FunctionCallContext functionCall() {
 			return getRuleContext(FunctionCallContext.class,0);
@@ -829,7 +845,6 @@ public class AslParser extends Parser {
 		public ValueExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	public static class BooleanExprContext extends ExprContext {
-		public TerminalNode NOT() { return getToken(AslParser.NOT, 0); }
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
@@ -848,11 +863,11 @@ public class AslParser extends Parser {
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
-		public TerminalNode MINUS() { return getToken(AslParser.MINUS, 0); }
-		public TerminalNode PLUS() { return getToken(AslParser.PLUS, 0); }
 		public TerminalNode MUL() { return getToken(AslParser.MUL, 0); }
 		public TerminalNode DIV() { return getToken(AslParser.DIV, 0); }
 		public TerminalNode MOD() { return getToken(AslParser.MOD, 0); }
+		public TerminalNode PLUS() { return getToken(AslParser.PLUS, 0); }
+		public TerminalNode MINUS() { return getToken(AslParser.MINUS, 0); }
 		public ArithmeticExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	public static class SubExprContext extends ExprContext {
@@ -899,15 +914,15 @@ public class AslParser extends Parser {
 			switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
 			case 1:
 				{
-				_localctx = new ArithmeticExprContext(_localctx);
+				_localctx = new UnaryArithmeticExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
 				setState(149);
-				((ArithmeticExprContext)_localctx).op = _input.LT(1);
+				((UnaryArithmeticExprContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(_la==PLUS || _la==MINUS) ) {
-					((ArithmeticExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+					((UnaryArithmeticExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 				}
 				else {
 					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -920,7 +935,7 @@ public class AslParser extends Parser {
 				break;
 			case 2:
 				{
-				_localctx = new BooleanExprContext(_localctx);
+				_localctx = new UnaryBooleanExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(151);

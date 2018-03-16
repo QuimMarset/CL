@@ -141,7 +141,7 @@ void SymbolsListener::exitVariable_decl(AslParser::Variable_declContext *ctx) {
             Symbols.addLocalVar(ident, t);
         }
     }
-  DEBUG_EXIT();
+    DEBUG_EXIT();
 }
 
 void SymbolsListener::enterType(AslParser::TypeContext *ctx) {
@@ -162,9 +162,9 @@ void SymbolsListener::exitType(AslParser::TypeContext *ctx) {
         t = Types.createCharacterTy();
     }
     else { // array type
-            unsigned int size = stoi(ctx->array()->INTVAL()->getText());
-            TypesMgr::TypeId elementType = getTypeDecor(ctx->array()->type());
-            t = Types.createArrayTy(size, elementType);
+        unsigned int size = stoi(ctx->array()->INTVAL()->getText());
+        TypesMgr::TypeId elementType = getTypeDecor(ctx->array()->type());
+        t = Types.createArrayTy(size, elementType);
     }
     putTypeDecor(ctx, t);
     DEBUG_EXIT();

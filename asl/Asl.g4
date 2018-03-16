@@ -62,11 +62,7 @@ type
         ;
 
 functionCall
-        : ID '(' paramsCall? ')'
-        ;
-
-paramsCall
-        : expr (',' expr)*
+        : ident '(' (expr (',' expr)*)? ')'
         ;
 
 statements

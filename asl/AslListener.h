@@ -35,9 +35,6 @@ public:
   virtual void enterFunctionCall(AslParser::FunctionCallContext *ctx) = 0;
   virtual void exitFunctionCall(AslParser::FunctionCallContext *ctx) = 0;
 
-  virtual void enterParamsCall(AslParser::ParamsCallContext *ctx) = 0;
-  virtual void exitParamsCall(AslParser::ParamsCallContext *ctx) = 0;
-
   virtual void enterStatements(AslParser::StatementsContext *ctx) = 0;
   virtual void exitStatements(AslParser::StatementsContext *ctx) = 0;
 

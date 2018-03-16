@@ -37,9 +37,6 @@ public:
   virtual void enterFunctionCall(AslParser::FunctionCallContext * /*ctx*/) override { }
   virtual void exitFunctionCall(AslParser::FunctionCallContext * /*ctx*/) override { }
 
-  virtual void enterParamsCall(AslParser::ParamsCallContext * /*ctx*/) override { }
-  virtual void exitParamsCall(AslParser::ParamsCallContext * /*ctx*/) override { }
-
   virtual void enterStatements(AslParser::StatementsContext * /*ctx*/) override { }
   virtual void exitStatements(AslParser::StatementsContext * /*ctx*/) override { }
 

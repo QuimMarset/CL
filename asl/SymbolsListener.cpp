@@ -48,7 +48,6 @@
 
 // using namespace std;
 
-
 // Constructor
 SymbolsListener::SymbolsListener(TypesMgr       & Types,
 				 SymTable       & Symbols,
@@ -99,7 +98,7 @@ void SymbolsListener::exitFunction(AslParser::FunctionContext *ctx) {
 void SymbolsListener::enterParams(AslParser::ParamsContext *ctx) {
     DEBUG_ENTER();
 }
-void SymbolsListener::enterParams(AslParser::ParamsContext *ctx) {
+void SymbolsListener::exitParams(AslParser::ParamsContext *ctx) {
     std::string ident;
     TypesMgr::TypeId t;
     for (unsigned int i = 0;i < ctx->ID().size(); ++i) {

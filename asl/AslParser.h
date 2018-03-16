@@ -24,9 +24,9 @@ public:
 
   enum {
     RuleProgram = 0, RuleFunction = 1, RuleParams = 2, RuleDeclarations = 3, 
-    RuleVariable_decl = 4, RuleType = 5, RuleFunctionCall = 6, RuleParamsCall = 7, 
-    RuleStatements = 8, RuleStatement = 9, RuleExpr = 10, RuleValue = 11, 
-    RuleLeft_expr = 12, RuleIdent = 13, RuleArray = 14
+    RuleVariable_decl = 4, RuleType = 5, RuleFunctionCall = 6, RuleStatements = 7, 
+    RuleStatement = 8, RuleExpr = 9, RuleValue = 10, RuleLeft_expr = 11, 
+    RuleIdent = 12, RuleArray = 13
   };
 
   AslParser(antlr4::TokenStream *input);
@@ -46,7 +46,6 @@ public:
   class Variable_declContext;
   class TypeContext;
   class FunctionCallContext;
-  class ParamsCallContext;
   class StatementsContext;
   class StatementContext;
   class ExprContext;
@@ -157,19 +156,6 @@ public:
     FunctionCallContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *ID();
-    ParamsCallContext *paramsCall();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  FunctionCallContext* functionCall();
-
-  class  ParamsCallContext : public antlr4::ParserRuleContext {
-  public:
-    ParamsCallContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
     std::vector<ExprContext *> expr();
     ExprContext* expr(size_t i);
 
@@ -178,7 +164,7 @@ public:
    
   };
 
-  ParamsCallContext* paramsCall();
+  FunctionCallContext* functionCall();
 
   class  StatementsContext : public antlr4::ParserRuleContext {
   public:

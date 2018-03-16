@@ -150,26 +150,31 @@ void TypeCheckListener::exitWhileStmt(AslParser::WhleStmtContext *ctx) {
   DEBUG_EXIT();
 }
 
-void TypeCheckListener::enterProcCall(AslParser::ProcCallContext *ctx) {
+void TypeCheckListener::enterFunctionCall(AslParser::ProcCallContext *ctx) {
   DEBUG_ENTER();
 }
-void TypeCheckListener::exitProcCall(AslParser::ProcCallContext *ctx) {
+void TypeCheckListener::exitFunctionCall(AslParser::ProcCallContext *ctx) {
   TypesMgr::TypeId t1 = getTypeDecor(ctx->ident());
   if (not Types.isFunctionTy(t1) and not Types.isErrorTy(t1)) {
     Errors.isNotCallable(ctx->ident());
   }
+  int numParams = Types.getNumOfParameters(t1);
+  if (numParams != ctx->expr().size()) {
+      Errors.numberOfParameters(ctx);
+  }
+  TypesMgr::TypeId paramType;
+  TypesMgr::TypeId paramRealType;
+  int numParams = Types.getNumOfParameters()
+  for (unsigned int i = 0;i < ctx->expr().size(); ++i) {
+      paramType = getTypeDecor(ctx->expr(i));
+      paramRealType = Types.getParameterType(t1, i);
+      if (not Types.equalTypes(paramType, paramRealType)) {
+          Errors.incompatibleParameter(ctx, ctx->expr(i));
+      }
+  }
   DEBUG_EXIT();
 }
 
-void TypeCheckListener::enterParamsCall(AslParser::ParamsCallContext *ctx) {
-    DEBUG_ENTER();
-}
-void TypeCheckListener::exitParamsCall(AslParser::ParamsCallContext *ctx) {
-    for (unsigned int i = 0;i < ctx->type().size(); ++i) {
-        
-    }
-    DEBUG_EXIT();
-}
 
 void TypeCheckListener::enterReadStmt(AslParser::ReadStmtContext *ctx) {
   DEBUG_ENTER();

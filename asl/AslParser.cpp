@@ -536,8 +536,8 @@ AslParser::FunctionCallContext::FunctionCallContext(ParserRuleContext *parent, s
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* AslParser::FunctionCallContext::ID() {
-  return getToken(AslParser::ID, 0);
+AslParser::IdentContext* AslParser::FunctionCallContext::ident() {
+  return getRuleContext<AslParser::IdentContext>(0);
 }
 
 std::vector<AslParser::ExprContext *> AslParser::FunctionCallContext::expr() {
@@ -576,7 +576,7 @@ AslParser::FunctionCallContext* AslParser::functionCall() {
   try {
     enterOuterAlt(_localctx, 1);
     setState(87);
-    match(AslParser::ID);
+    ident();
     setState(88);
     match(AslParser::T__0);
     setState(97);
@@ -1083,6 +1083,54 @@ void AslParser::IdentExprContext::exitRule(tree::ParseTreeListener *listener) {
   if (parserListener != nullptr)
     parserListener->exitIdentExpr(this);
 }
+//----------------- UnaryArithmeticExprContext ------------------------------------------------------------------
+
+AslParser::ExprContext* AslParser::UnaryArithmeticExprContext::expr() {
+  return getRuleContext<AslParser::ExprContext>(0);
+}
+
+tree::TerminalNode* AslParser::UnaryArithmeticExprContext::MINUS() {
+  return getToken(AslParser::MINUS, 0);
+}
+
+tree::TerminalNode* AslParser::UnaryArithmeticExprContext::PLUS() {
+  return getToken(AslParser::PLUS, 0);
+}
+
+AslParser::UnaryArithmeticExprContext::UnaryArithmeticExprContext(ExprContext *ctx) { copyFrom(ctx); }
+
+void AslParser::UnaryArithmeticExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<AslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterUnaryArithmeticExpr(this);
+}
+void AslParser::UnaryArithmeticExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<AslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitUnaryArithmeticExpr(this);
+}
+//----------------- UnaryBooleanExprContext ------------------------------------------------------------------
+
+tree::TerminalNode* AslParser::UnaryBooleanExprContext::NOT() {
+  return getToken(AslParser::NOT, 0);
+}
+
+AslParser::ExprContext* AslParser::UnaryBooleanExprContext::expr() {
+  return getRuleContext<AslParser::ExprContext>(0);
+}
+
+AslParser::UnaryBooleanExprContext::UnaryBooleanExprContext(ExprContext *ctx) { copyFrom(ctx); }
+
+void AslParser::UnaryBooleanExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<AslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterUnaryBooleanExpr(this);
+}
+void AslParser::UnaryBooleanExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<AslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitUnaryBooleanExpr(this);
+}
 //----------------- ProcCallExprContext ------------------------------------------------------------------
 
 AslParser::FunctionCallContext* AslParser::ProcCallExprContext::functionCall() {
@@ -1120,10 +1168,6 @@ void AslParser::ValueExprContext::exitRule(tree::ParseTreeListener *listener) {
     parserListener->exitValueExpr(this);
 }
 //----------------- BooleanExprContext ------------------------------------------------------------------
-
-tree::TerminalNode* AslParser::BooleanExprContext::NOT() {
-  return getToken(AslParser::NOT, 0);
-}
 
 std::vector<AslParser::ExprContext *> AslParser::BooleanExprContext::expr() {
   return getRuleContexts<AslParser::ExprContext>();
@@ -1163,14 +1207,6 @@ AslParser::ExprContext* AslParser::ArithmeticExprContext::expr(size_t i) {
   return getRuleContext<AslParser::ExprContext>(i);
 }
 
-tree::TerminalNode* AslParser::ArithmeticExprContext::MINUS() {
-  return getToken(AslParser::MINUS, 0);
-}
-
-tree::TerminalNode* AslParser::ArithmeticExprContext::PLUS() {
-  return getToken(AslParser::PLUS, 0);
-}
-
 tree::TerminalNode* AslParser::ArithmeticExprContext::MUL() {
   return getToken(AslParser::MUL, 0);
 }
@@ -1181,6 +1217,14 @@ tree::TerminalNode* AslParser::ArithmeticExprContext::DIV() {
 
 tree::TerminalNode* AslParser::ArithmeticExprContext::MOD() {
   return getToken(AslParser::MOD, 0);
+}
+
+tree::TerminalNode* AslParser::ArithmeticExprContext::PLUS() {
+  return getToken(AslParser::PLUS, 0);
+}
+
+tree::TerminalNode* AslParser::ArithmeticExprContext::MINUS() {
+  return getToken(AslParser::MINUS, 0);
 }
 
 AslParser::ArithmeticExprContext::ArithmeticExprContext(ExprContext *ctx) { copyFrom(ctx); }
@@ -1284,17 +1328,17 @@ AslParser::ExprContext* AslParser::expr(int precedence) {
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 12, _ctx)) {
     case 1: {
-      _localctx = _tracker.createInstance<ArithmeticExprContext>(_localctx);
+      _localctx = _tracker.createInstance<UnaryArithmeticExprContext>(_localctx);
       _ctx = _localctx;
       previousContext = _localctx;
 
       setState(149);
-      dynamic_cast<ArithmeticExprContext *>(_localctx)->op = _input->LT(1);
+      dynamic_cast<UnaryArithmeticExprContext *>(_localctx)->op = _input->LT(1);
       _la = _input->LA(1);
       if (!(_la == AslParser::PLUS
 
       || _la == AslParser::MINUS)) {
-        dynamic_cast<ArithmeticExprContext *>(_localctx)->op = _errHandler->recoverInline(this);
+        dynamic_cast<UnaryArithmeticExprContext *>(_localctx)->op = _errHandler->recoverInline(this);
       }
       else {
         _errHandler->reportMatch(this);
@@ -1306,7 +1350,7 @@ AslParser::ExprContext* AslParser::expr(int precedence) {
     }
 
     case 2: {
-      _localctx = _tracker.createInstance<BooleanExprContext>(_localctx);
+      _localctx = _tracker.createInstance<UnaryBooleanExprContext>(_localctx);
       _ctx = _localctx;
       previousContext = _localctx;
       setState(151);
@@ -1897,7 +1941,7 @@ AslParser::Initializer::Initializer() {
     0xf, 0x2, 0x57, 0x52, 0x3, 0x2, 0x2, 0x2, 0x57, 0x53, 0x3, 0x2, 0x2, 
     0x2, 0x57, 0x54, 0x3, 0x2, 0x2, 0x2, 0x57, 0x55, 0x3, 0x2, 0x2, 0x2, 
     0x57, 0x56, 0x3, 0x2, 0x2, 0x2, 0x58, 0xd, 0x3, 0x2, 0x2, 0x2, 0x59, 
-    0x5a, 0x7, 0x30, 0x2, 0x2, 0x5a, 0x63, 0x7, 0x3, 0x2, 0x2, 0x5b, 0x60, 
+    0x5a, 0x5, 0x1a, 0xe, 0x2, 0x5a, 0x63, 0x7, 0x3, 0x2, 0x2, 0x5b, 0x60, 
     0x5, 0x14, 0xb, 0x2, 0x5c, 0x5d, 0x7, 0x6, 0x2, 0x2, 0x5d, 0x5f, 0x5, 
     0x14, 0xb, 0x2, 0x5e, 0x5c, 0x3, 0x2, 0x2, 0x2, 0x5f, 0x62, 0x3, 0x2, 
     0x2, 0x2, 0x60, 0x5e, 0x3, 0x2, 0x2, 0x2, 0x60, 0x61, 0x3, 0x2, 0x2, 

@@ -67,6 +67,12 @@ public:
   virtual void enterIdentExpr(AslParser::IdentExprContext * /*ctx*/) override { }
   virtual void exitIdentExpr(AslParser::IdentExprContext * /*ctx*/) override { }
 
+  virtual void enterUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext * /*ctx*/) override { }
+  virtual void exitUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext * /*ctx*/) override { }
+
+  virtual void enterUnaryBooleanExpr(AslParser::UnaryBooleanExprContext * /*ctx*/) override { }
+  virtual void exitUnaryBooleanExpr(AslParser::UnaryBooleanExprContext * /*ctx*/) override { }
+
   virtual void enterProcCallExpr(AslParser::ProcCallExprContext * /*ctx*/) override { }
   virtual void exitProcCallExpr(AslParser::ProcCallExprContext * /*ctx*/) override { }
 

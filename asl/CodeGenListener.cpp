@@ -43,7 +43,7 @@
 #include "../common/debug.h"
 
 // using namespace std;
-
+/*
 
 // Constructor
 CodeGenListener::CodeGenListener(TypesMgr       & Types,
@@ -243,10 +243,10 @@ void CodeGenListener::exitLeft_expr(AslParser::Left_exprContext *ctx) {
   DEBUG_ENTER();
 }
 
-void CodeGenListener::enterArithmetic(AslParser::ArithmeticContext *ctx) {
+void CodeGenListener::enterArithmeticExpr(AslParser::ArithmeticExprContext *ctx) {
   DEBUG_ENTER();
 }
-void CodeGenListener::exitArithmetic(AslParser::ArithmeticContext *ctx) {
+void CodeGenListener::exitArithmeticExpr(AslParser::ArithmeticExprContext *ctx) {
   std::string     addr1 = getAddrDecor(ctx->expr(0));
   instructionList code1 = getCodeDecor(ctx->expr(0));
   std::string     addr2 = getAddrDecor(ctx->expr(1));
@@ -266,10 +266,10 @@ void CodeGenListener::exitArithmetic(AslParser::ArithmeticContext *ctx) {
   DEBUG_EXIT();
 }
 
-void CodeGenListener::enterRelational(AslParser::RelationalContext *ctx) {
+void CodeGenListener::enterRelationalExpr(AslParser::RelationalExprContext *ctx) {
   DEBUG_ENTER();
 }
-void CodeGenListener::exitRelational(AslParser::RelationalContext *ctx) {
+void CodeGenListener::exitRelationalExpr(AslParser::RelationalExprContext *ctx) {
   std::string     addr1 = getAddrDecor(ctx->expr(0));
   instructionList code1 = getCodeDecor(ctx->expr(0));
   std::string     addr2 = getAddrDecor(ctx->expr(1));
@@ -299,10 +299,10 @@ void CodeGenListener::exitValue(AslParser::ValueContext *ctx) {
   DEBUG_EXIT();
 }
 
-void CodeGenListener::enterExprIdent(AslParser::ExprIdentContext *ctx) {
+void CodeGenListener::enterIdentExpr(AslParser::IdentExprContext *ctx) {
   DEBUG_ENTER();
 }
-void CodeGenListener::exitExprIdent(AslParser::ExprIdentContext *ctx) {
+void CodeGenListener::exitIdentExpr(AslParser::IdentExprContext *ctx) {
   putAddrDecor(ctx, getAddrDecor(ctx->ident()));
   putOffsetDecor(ctx, getOffsetDecor(ctx->ident()));
   putCodeDecor(ctx, getCodeDecor(ctx->ident()));
@@ -317,7 +317,7 @@ void CodeGenListener::exitIdent(AslParser::IdentContext *ctx) {
   putOffsetDecor(ctx, "");
   putCodeDecor(ctx, instructionList());
   DEBUG_EXIT();
-}
+}*/
 
 // void CodeGenListener::enterEveryRule(antlr4::ParserRuleContext *ctx) {
 //   DEBUG_ENTER();

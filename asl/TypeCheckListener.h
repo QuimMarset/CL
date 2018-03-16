@@ -65,6 +65,9 @@ public:
   void enterFunction(AslParser::FunctionContext *ctx);
   void exitFunction(AslParser::FunctionContext *ctx);
 
+  void enterParams(AslParser::ParamsContext *ctx);
+  void exitParams(AslParser::ParamsContext *ctx);
+
   void enterDeclarations(AslParser::DeclarationsContext *ctx);
   void exitDeclarations(AslParser::DeclarationsContext *ctx);
 
@@ -83,8 +86,11 @@ public:
   void enterIfStmt(AslParser::IfStmtContext *ctx);
   void exitIfStmt(AslParser::IfStmtContext *ctx);
 
-  void enterProcCall(AslParser::ProcCallContext *ctx);
-  void exitProcCall(AslParser::ProcCallContext *ctx);
+  void enterWhileStmt(AslParser::WhileStmtContext *ctx);
+  void exitWhileStmt(AslParser::WhileStmtContext *ctx);
+
+  void enterFunctionCall(AslParser::FunctionCallContext *ctx);
+  void exitFunctionCall(AslParser::FunctionCallContext *ctx);
 
   void enterReadStmt(AslParser::ReadStmtContext *ctx);
   void exitReadStmt(AslParser::ReadStmtContext *ctx);
@@ -98,20 +104,35 @@ public:
   void enterLeft_expr(AslParser::Left_exprContext *ctx);
   void exitLeft_expr(AslParser::Left_exprContext *ctx);
 
-  void enterArithmetic(AslParser::ArithmeticContext *ctx);
-  void exitArithmetic(AslParser::ArithmeticContext *ctx);
+  void enterArithmeticExpr(AslParser::ArithmeticExprContext *ctx);
+  void exitArithmeticExpr(AslParser::ArithmeticExprContext *ctx);
 
-  void enterRelational(AslParser::RelationalContext *ctx);
-  void exitRelational(AslParser::RelationalContext *ctx);
+  void enterRelationalExpr(AslParser::RelationalExprContext *ctx);
+  void exitRelationalExpr(AslParser::RelationalExprContext *ctx);
+
+  void enterBooleanExpr(AslParser::BooleanExprContext *ctx);
+  void exitBooleanExpr(AslParser::BooleanExprContext *ctx);
+
+  void enterValueExpr(AslParser::ValueExprContext *ctx);
+  void exitValueExpr(AslParser::ValueExprContext *ctx);
+
+  void enterSubExpr(AslParser::SubExprContext *ctx);
+  void exitSubExpr(AslParser::SubExprContext *ctx);
+
+  void enterProcCallExpr(AslParser::ProcCallExprContext *ctx);
+  void exitProcCallExpr(AslParser::ProcCallExprContext *ctx);
+
+  void enterIdentExpr(AslParser::IdentExprContext *ctx);
+  void exitIdentExpr(AslParser::IdentExprContext *ctx);
 
   void enterValue(AslParser::ValueContext *ctx);
   void exitValue(AslParser::ValueContext *ctx);
 
-  void enterExprIdent(AslParser::ExprIdentContext *ctx);
-  void exitExprIdent(AslParser::ExprIdentContext *ctx);
-
   void enterIdent(AslParser::IdentContext *ctx);
   void exitIdent(AslParser::IdentContext *ctx);
+
+  void enterArray(AslParser::ArrayContext *ctx);
+  void exitArray(AslParser::ArrayContext *ctx);
 
   // void enterEveryRule(antlr4::ParserRuleContext *ctx);
   // void exitEveryRule(antlr4::ParserRuleContext *ctx);

@@ -81,11 +81,11 @@ statement
         ;
 
 expr    
-        : op=(MINUS | PLUS) expr                                # arithmeticExpr
+        : op=(MINUS | PLUS) expr                                # unaryArithmeticExpr
         | expr op=(MUL | DIV | MOD) expr                        # arithmeticExpr
         | expr op=(PLUS | MINUS) expr                           # arithmeticExpr
         | expr op=(EQ | NEQ | GT | LT | LET | GET) expr         # relationalExpr
-        | NOT expr                                              # booleanExpr
+        | NOT expr                                              # unaryBooleanExpr
         | expr AND expr                                         # booleanExpr
         | expr OR expr                                          # booleanExpr
         | '(' expr ')'                                          # subExpr

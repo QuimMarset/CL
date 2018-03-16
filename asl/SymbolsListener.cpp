@@ -85,8 +85,8 @@ void SymbolsListener::exitFunction(AslParser::FunctionContext *ctx) {
   }
   else {
     std::vector<TypesMgr::TypeId> lParamsTy;
-    for (unsigned int i = 0;i < ctx->params()->types().size(); ++i) {
-        lParamsTy.push_back(getTypeDecor(ctx->params()->types(i)));
+    for (unsigned int i = 0;i < ctx->params()->type().size(); ++i) {
+        lParamsTy.push_back(getTypeDecor(ctx->params()->type(i)));
     }
     TypesMgr::TypeId tRet = getTypeDecor(ctx->type());
     TypesMgr::TypeId tFunc = Types.createFunctionTy(lParamsTy, tRet);
@@ -127,7 +127,7 @@ void SymbolsListener::enterVariable_decl(AslParser::Variable_declContext *ctx) {
 void SymbolsListener::exitVariable_decl(AslParser::Variable_declContext *ctx) {
     TypesMgr::TypeId t = getTypeDecor(ctx->type());
     std::string ident;
-    for (unisgned int i = 0;i < ctx->ID().size();++i) {
+    for (unsigned int i = 0;i < ctx->ID().size();++i) {
         ident = ctx->ID(i)->getText();
         if (Symbols.findInCurrentScope(ident)) {
             Errors.declaredIdent(ctx->ID(i));
@@ -157,7 +157,7 @@ void SymbolsListener::exitType(AslParser::TypeContext *ctx) {
         t = Types.createCharacterTy();
     }
     else { // array type
-            unsigned int size = ctx->array()->INT()->getText();
+            unsigned int size = stoi(ctx->array()->INTVAL()->getText());
             TypesMgr::TypeId elementType = getTypeDecor(ctx->array()->type());
             t = Types.createArrayTy(size, elementType);
     }
@@ -228,13 +228,26 @@ void SymbolsListener::exitReturnStmt(AslParser::ReturnStmtContext *ctx) {
   DEBUG_EXIT();
 }
 
-void SymbolsListener::enterLeft_expr(AslParser::Left_exprContext *ctx) {
+void SymbolsListener::enterArithmeticExpr(AslParser::ArithmeticExprContext *ctx) {
   DEBUG_ENTER();
 }
-void SymbolsListener::exitLeft_expr(AslParser::Left_exprContext *ctx) {
+void SymbolsListener::exitArithmeticExpr(AslParser::ArithmeticExprContext *ctx) {
   DEBUG_EXIT();
 }
 
+void SymbolsListener::enterRelationalExpr(AslParser::RelationalExprContext *ctx) {
+  DEBUG_ENTER();
+}
+void SymbolsListener::exitRelationalExpr(AslParser::RelationalExprContext *ctx) {
+  DEBUG_EXIT();
+}
+
+void SymbolsListener::enterBooleanExpr(AslParser::BooleanExprContext *ctx) {
+  DEBUG_ENTER();
+}
+void SymbolsListener::exitBooleanExpr(AslParser::BooleanExprContext *ctx) {
+  DEBUG_EXIT();
+}
 
 void SymbolsListener::enterSubExpr(AslParser::SubExprContext *ctx) {
   DEBUG_ENTER();
@@ -250,26 +263,39 @@ void SymbolsListener::exitValueExpr(AslParser::ValueExprContext *ctx) {
   DEBUG_EXIT();
 }
 
-
-void SymbolsListener::enterExprIdent(AslParser::ExprIdentContext *ctx) {
+void SymbolsListener::enterProcCallExpr(AslParser::ProcCallExprContext *ctx) {
   DEBUG_ENTER();
 }
-void SymbolsListener::exitExprIdent(AslParser::ExprIdentContext *ctx) {
+void SymbolsListener::exitProcCallExpr(AslParser::ProcCallExprContext *ctx) {
   DEBUG_EXIT();
 }
 
-void SymbolListener::enterLeft_expr(AslParser::Left_exprContext *ctx) {
+void SymbolsListener::enterIdentExpr(AslParser::IdentExprContext *ctx) {
+  DEBUG_ENTER();
+}
+void SymbolsListener::exitIdentExpr(AslParser::IdentExprContext *ctx) {
+  DEBUG_EXIT();
+}
+
+void SymbolsListener::enterLeft_expr(AslParser::Left_exprContext *ctx) {
     DEBUG_ENTER();
 }
-void SymbolListener::exitLeft_expr(AslParser::Left_exprContext *ctx) {
+void SymbolsListener::exitLeft_expr(AslParser::Left_exprContext *ctx) {
     DEBUG_EXIT();
 }
 
-void SymbolsListenerenter::enterArray(AslParser::ArrayContext *ctx) {
+void SymbolsListener::enterArray(AslParser::ArrayContext *ctx) {
     DEBUG_ENTER();
 }
 void SymbolsListener::exitArray(AslParser::ArrayContext *ctx) {
     DEBUG_EXIT();
+}
+
+void SymbolsListener::enterValue(AslParser::ValueContext *ctx) {
+  DEBUG_ENTER();
+}
+void SymbolsListener::exitValue(AslParser::ValueContext *ctx) {
+  DEBUG_EXIT();
 }
 
 void SymbolsListener::enterIdent(AslParser::IdentContext *ctx) {

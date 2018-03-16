@@ -63,6 +63,9 @@ public:
   void enterFunction(AslParser::FunctionContext *ctx);
   void exitFunction(AslParser::FunctionContext *ctx);
 
+  void enterParams(AslParser::ParamsContext *ctx);
+  void exitParams(AslParser::ParamsContext *ctx);
+
   void enterDeclarations(AslParser::DeclarationsContext *ctx);
   void exitDeclarations(AslParser::DeclarationsContext *ctx);
 
@@ -98,24 +101,15 @@ public:
 
   void enterReturnStmt(AslParser::ReturnStmtContext *ctx);
   void exitReturnStmt(AslParser::ReturnStmtContext *ctx);
-  
-  void enterUnaryExpr(AslParser::UnaryExprContext *ctx);
-  void exitUnaryExpr(AslParser::UnaryExprContext *ctx);
 
-  void enterMulModDivExpr(AslParser::MulModDivExprContext *ctx);
-  void exitMulModDivExpr(AslParser::MulModDivExprContext *ctx);
-
-  void enterPlusMinusExpr(AslParser::PlusMinusExprContext *ctx);
-  void exitPlusMinusExpr(AslParser::PlusMinusExprContext *ctx);
+  void enterArithmeticExpr(AslParser::ArithmeticExprContext *ctx);
+  void exitArithmeticExpr(AslParser::ArithmeticExprContext *ctx);
 
   void enterRelationalExpr(AslParser::RelationalExprContext *ctx);
   void exitRelationalExpr(AslParser::RelationalExprContext *ctx);
 
-  void enterAndExpr(AslParser::AndExprContext *ctx);
-  void exitAndExpr(AslParser::AndExprContext *ctx);
-
-  void enterOrExpr(AslParser::OrExprContext *ctx);
-  void exitOrExpr(AslParser::OrExprContext *ctx);
+  void enterBooleanExpr(AslParser::BooleanExprContext *ctx);
+  void exitBooleanExpr(AslParser::BooleanExprContext *ctx);
 
   void enterSubExpr(AslParser::SubExprContext *ctx);
   void exitSubExpr(AslParser::SubExprContext *ctx);
@@ -128,9 +122,6 @@ public:
 
   void enterIdentExpr(AslParser::IdentExprContext *ctx);
   void exitIdentExpr(AslParser::IdentExprContext *ctx);
-
-  void enterExprIdent(AslParser::ExprIdentContext *ctx);
-  void exitExprIdent(AslParser::ExprIdentContext *ctx);
 
   void enterValue(AslParser::ValueContext *ctx);
   void exitValue(AslParser::ValueContext *ctx);

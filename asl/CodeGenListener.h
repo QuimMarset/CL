@@ -61,7 +61,7 @@ public:
 		  SymTable       & Symbols,
 		  TreeDecoration & TreeNodeProps,
 		  code           & Code);
-
+/*
   void enterProgram(AslParser::ProgramContext *ctx);
   void exitProgram(AslParser::ProgramContext *ctx);
 
@@ -120,7 +120,7 @@ public:
   // void exitEveryRule(antlr4::ParserRuleContext *ctx);
   // void visitTerminal(antlr4::tree::TerminalNode *node);
   // void visitErrorNode(antlr4::tree::ErrorNode *node);
-
+*/
 private:
 
   // Attributes

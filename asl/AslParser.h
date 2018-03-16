@@ -155,7 +155,7 @@ public:
   public:
     FunctionCallContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *ID();
+    IdentContext *ident();
     std::vector<ExprContext *> expr();
     ExprContext* expr(size_t i);
 
@@ -305,6 +305,28 @@ public:
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
+  class  UnaryArithmeticExprContext : public ExprContext {
+  public:
+    UnaryArithmeticExprContext(ExprContext *ctx);
+
+    antlr4::Token *op = nullptr;
+    ExprContext *expr();
+    antlr4::tree::TerminalNode *MINUS();
+    antlr4::tree::TerminalNode *PLUS();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+  };
+
+  class  UnaryBooleanExprContext : public ExprContext {
+  public:
+    UnaryBooleanExprContext(ExprContext *ctx);
+
+    antlr4::tree::TerminalNode *NOT();
+    ExprContext *expr();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+  };
+
   class  ProcCallExprContext : public ExprContext {
   public:
     ProcCallExprContext(ExprContext *ctx);
@@ -327,7 +349,6 @@ public:
   public:
     BooleanExprContext(ExprContext *ctx);
 
-    antlr4::tree::TerminalNode *NOT();
     std::vector<ExprContext *> expr();
     ExprContext* expr(size_t i);
     antlr4::tree::TerminalNode *AND();
@@ -343,11 +364,11 @@ public:
     antlr4::Token *op = nullptr;
     std::vector<ExprContext *> expr();
     ExprContext* expr(size_t i);
-    antlr4::tree::TerminalNode *MINUS();
-    antlr4::tree::TerminalNode *PLUS();
     antlr4::tree::TerminalNode *MUL();
     antlr4::tree::TerminalNode *DIV();
     antlr4::tree::TerminalNode *MOD();
+    antlr4::tree::TerminalNode *PLUS();
+    antlr4::tree::TerminalNode *MINUS();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };

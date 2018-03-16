@@ -43,7 +43,7 @@
 #include "../common/debug.h"
 
 // using namespace std;
-/*
+
 
 // Constructor
 CodeGenListener::CodeGenListener(TypesMgr       & Types,
@@ -55,7 +55,7 @@ CodeGenListener::CodeGenListener(TypesMgr       & Types,
   Decorations{Decorations},
   Code{Code} {
 }
-
+/*
 void CodeGenListener::enterProgram(AslParser::ProgramContext *ctx) {
   DEBUG_ENTER();
   SymTable::ScopeId sc = getScopeDecor(ctx);

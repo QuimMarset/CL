@@ -104,11 +104,17 @@ public:
   void enterLeft_expr(AslParser::Left_exprContext *ctx);
   void exitLeft_expr(AslParser::Left_exprContext *ctx);
 
+  void enterUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext *ctx);
+  void exitUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext *ctx);
+
   void enterArithmeticExpr(AslParser::ArithmeticExprContext *ctx);
   void exitArithmeticExpr(AslParser::ArithmeticExprContext *ctx);
 
   void enterRelationalExpr(AslParser::RelationalExprContext *ctx);
   void exitRelationalExpr(AslParser::RelationalExprContext *ctx);
+
+  void enterUnaryBooleanExpr(AslParser::UnaryBooleanExprContext *ctx);
+  void exitUnaryBooleanExpr(AslParser::UnaryBooleanExprContext *ctx);
 
   void enterBooleanExpr(AslParser::BooleanExprContext *ctx);
   void exitBooleanExpr(AslParser::BooleanExprContext *ctx);

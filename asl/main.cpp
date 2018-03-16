@@ -94,7 +94,8 @@ int main(int argc, const char* argv[]) {
   }
 
   // print the parse tree (for debugging purposes)
-  std::cout << tree->toStringTree(&parser) << std::endl;
+  // std::cout << tree->toStringTree(&parser) << std::endl;
+
   // create a walker that will traverse the tree and do several things,
   // like checking variable types or generating code.
   antlr4::tree::ParseTreeWalker walker;
@@ -126,9 +127,9 @@ int main(int argc, const char* argv[]) {
   // Auxiliary class to store the code we will be creating
   code mycode;
   // Create a third listener that will generate code for each part of the tree
-  //CodeGenListener codegenerator(types, symbols, decorations, mycode);
+  CodeGenListener codegenerator(types, symbols, decorations, mycode);
   // Traverse the tree using this listener, so code is generated and stored in 'mycode'
-  //walker.walk(&codegenerator, tree);
+  walker.walk(&codegenerator, tree);
 
   // print generated code as output
   std::cout << mycode.dump() << std::endl;

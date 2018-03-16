@@ -85,10 +85,15 @@ void SymbolsListener::exitFunction(AslParser::FunctionContext *ctx) {
   }
   else {
     std::vector<TypesMgr::TypeId> lParamsTy;
-    for (unsigned int i = 0;i < ctx->params()->type().size(); ++i) {
-        lParamsTy.push_back(getTypeDecor(ctx->params()->type(i)));
+    if (ctx->params()) {
+        for (unsigned int i = 0;i < ctx->params()->type().size(); ++i) {
+            lParamsTy.push_back(getTypeDecor(ctx->params()->type(i)));
+        }   
     }
-    TypesMgr::TypeId tRet = getTypeDecor(ctx->type());
+    TypesMgr::TypeId tRet;
+    if (ctx->type()) {
+        tRet = getTypeDecor(ctx->type());
+    }
     TypesMgr::TypeId tFunc = Types.createFunctionTy(lParamsTy, tRet);
     Symbols.addFunction(ident, tFunc);
   }

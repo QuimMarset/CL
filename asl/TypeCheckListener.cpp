@@ -127,6 +127,9 @@ void TypeCheckListener::exitAssignStmt(AslParser::AssignStmtContext *ctx) {
     Errors.incompatibleAssignment(ctx->ASSIGN());
   if ((not Types.isErrorTy(t1)) and (not getIsLValueDecor(ctx->left_expr())))
     Errors.nonReferenceableLeftExpr(ctx->left_expr());
+    if (not Types.isErrorTy(t1) and (ctx->left_expr()->expr() and not Types.isArrayTy(t1))) {
+        Errors.nonArrayInArrayAccess(ctx);
+    }
   DEBUG_EXIT();
 }
 
@@ -164,7 +167,6 @@ void TypeCheckListener::exitFunctionCall(AslParser::ProcCallContext *ctx) {
   }
   TypesMgr::TypeId paramType;
   TypesMgr::TypeId paramRealType;
-  int numParams = Types.getNumOfParameters()
   for (unsigned int i = 0;i < ctx->expr().size(); ++i) {
       paramType = getTypeDecor(ctx->expr(i));
       paramRealType = Types.getParameterType(t1, i);
@@ -354,31 +356,39 @@ void TypeCheckListener::enterIdent(AslParser::IdentContext *ctx) {
 }
 void TypeCheckListener::exitIdent(AslParser::IdentContext *ctx) {
   std::string ident = ctx->getText();
-  bool error = false;
   if (Symbols.findInStack(ident) == -1) {
     Errors.undeclaredIdent(ctx->ID());
-    error = true;
-  }
-  if (ctx->expr()) {
-      TypesMgr::TypeId t = getTypeDecor(ctx->expr());
-      if (not Types.isIntegerTy()) {
-          Errors.nonIntegerIndexInArrayAccess(ctx);
-          error = true;
-      }
-  }
-  if (error) {
-        TypesMgr::TypeId te = Types.createErrorTy();
-        putTypeDecor(ctx, te);
-        putIsLValueDecor(ctx, true);
+    TypesMgr::TypeId te = Types.createErrorTy();
+    putTypeDecor(ctx, te);
+    putIsLValueDecor(ctx, true);
   }
   else {
     TypesMgr::TypeId t1 = Symbols.getType(ident);
-    putTypeDecor(ctx, t1);
-    if (Symbols.isFunctionClass(ident))
-      putIsLValueDecor(ctx, false);
-    else
-      putIsLValueDecor(ctx, true);
-  }
+    bool error = false;
+    if (ctx->expr()) {
+        if (not Types.isArrayTy(t1)) {
+            Error.nonArrayInArrayAccess(ctx);
+            error = true;
+        }
+        TypesMgr::TypeId t = getTypeDecor(ctx->expr());
+        if (not Types.isIntegerTy(t)) {
+          Errors.nonIntegerIndexInArrayAccess(ctx);
+          error = true;
+      }
+    }
+    if (error) {
+        TypesMgr::TypeId te = Types.createErrorTy();
+        putTypeDecor(ctx, te);
+        putIsLValueDecor(ctx, true);
+    }
+    else {
+        putTypeDecor(ctx, t1);
+        if (Symbols.isFunctionClass(ident))
+            putIsLValueDecor(ctx, false);
+        else
+        putIsLValueDecor(ctx, true);
+        }   
+    }
   DEBUG_EXIT();
 }
 

@@ -32,6 +32,9 @@ public:
   virtual void enterType(AslParser::TypeContext *ctx) = 0;
   virtual void exitType(AslParser::TypeContext *ctx) = 0;
 
+  virtual void enterBasicType(AslParser::BasicTypeContext *ctx) = 0;
+  virtual void exitBasicType(AslParser::BasicTypeContext *ctx) = 0;
+
   virtual void enterFunctionCall(AslParser::FunctionCallContext *ctx) = 0;
   virtual void exitFunctionCall(AslParser::FunctionCallContext *ctx) = 0;
 

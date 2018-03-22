@@ -34,6 +34,9 @@ public:
   virtual void enterType(AslParser::TypeContext * /*ctx*/) override { }
   virtual void exitType(AslParser::TypeContext * /*ctx*/) override { }
 
+  virtual void enterBasicType(AslParser::BasicTypeContext * /*ctx*/) override { }
+  virtual void exitBasicType(AslParser::BasicTypeContext * /*ctx*/) override { }
+
   virtual void enterFunctionCall(AslParser::FunctionCallContext * /*ctx*/) override { }
   virtual void exitFunctionCall(AslParser::FunctionCallContext * /*ctx*/) override { }
 

@@ -38,7 +38,7 @@ program
         ;
 
 function
-        : FUNC ID '(' params? ')' (':' type)? declarations 
+        : FUNC ID '(' params? ')' (':' basicType)? declarations 
             statements ENDFUNC
         ;
 params
@@ -54,11 +54,15 @@ variable_decl
         ;
 
 type    
+        : basicType
+        | array
+        ;
+
+basicType
         : INT
         | FLOAT
         | CHAR
         | BOOL
-        | array
         ;
 
 functionCall
@@ -77,7 +81,7 @@ statement
         | READ left_expr ';'                                    # readStmt
         | WRITE expr ';'                                        # writeExpr
         | WRITE STRING ';'                                      # writeString
-        | RETURN expr ';'                                       # returnStmt
+        | RETURN (expr)? ';'                                    # returnStmt
         ;
 
 expr    
@@ -85,13 +89,13 @@ expr
         | expr op=(MUL | DIV | MOD) expr                        # arithmeticExpr
         | expr op=(PLUS | MINUS) expr                           # arithmeticExpr
         | expr op=(EQ | NEQ | GT | LT | LET | GET) expr         # relationalExpr
-        | NOT expr                                              # unaryBooleanExpr
-        | expr AND expr                                         # booleanExpr
-        | expr OR expr                                          # booleanExpr
+        | op=NOT expr                                           # unaryBooleanExpr
+        | expr op=AND expr                                      # booleanExpr
+        | expr op=OR expr                                       # booleanExpr
         | '(' expr ')'                                          # subExpr
         | value                                                 # valueExpr
         | functionCall                                          # procCallExpr
-        | ident                                                 # identExpr
+        | ident ('[' expr ']')?                                 # identExpr
         ;
 
 value
@@ -102,15 +106,15 @@ value
         ;
 
 left_expr
-        : ident
+        : ident ('[' expr ']')?
         ;
 
 ident
-        : ID ('[' expr ']')?
+        : ID 
         ;
 
 array   
-        : ARRAY '[' INTVAL ']' OF type
+        : ARRAY '[' INTVAL ']' OF basicType
         ;
 
 //////////////////////////////////////////////////

@@ -91,8 +91,8 @@ void SymbolsListener::exitFunction(AslParser::FunctionContext *ctx) {
         }   
     }
     TypesMgr::TypeId tRet = Types.createVoidTy();
-    if (ctx->type()) {
-        tRet = getTypeDecor(ctx->type());
+    if (ctx->basicType()) {
+        tRet = getTypeDecor(ctx->basicType());
     }
     TypesMgr::TypeId tFunc = Types.createFunctionTy(lParamsTy, tRet);
     Symbols.addFunction(ident, tFunc);
@@ -149,6 +149,19 @@ void SymbolsListener::enterType(AslParser::TypeContext *ctx) {
 }
 void SymbolsListener::exitType(AslParser::TypeContext *ctx) {
     TypesMgr::TypeId t;
+    if (ctx->basicType()) {
+        putTypeDecor(ctx, getTypeDecor(ctx->basicType()));
+    }
+    else {
+        putTypeDecor(ctx, getTypeDecor(ctx->array()));
+    }
+}
+
+void SymbolsListener::enterBasicType(AslParser::BasicTypeContext *ctx) {
+    DEBUG_ENTER();
+}
+void SymbolsListener::exitBasicType(AslParser::BasicTypeContext *ctx) {
+    TypesMgr::TypeId t;
     if (ctx->INT()) {
         t = Types.createIntegerTy();
     }
@@ -158,14 +171,20 @@ void SymbolsListener::exitType(AslParser::TypeContext *ctx) {
     else if (ctx->FLOAT()) {
         t = Types.createFloatTy();
     }
-    else if (ctx->CHAR()) {
+    else { // char type
         t = Types.createCharacterTy();
     }
-    else { // array type
-        unsigned int size = stoi(ctx->array()->INTVAL()->getText());
-        TypesMgr::TypeId elementType = getTypeDecor(ctx->array()->type());
-        t = Types.createArrayTy(size, elementType);
-    }
+    putTypeDecor(ctx, t);
+    DEBUG_EXIT();
+}
+
+void SymbolsListener::enterArray(AslParser::ArrayContext *ctx) {
+    DEBUG_ENTER();
+}
+void SymbolsListener::exitArray(AslParser::ArrayContext *ctx) {
+    unsigned int size = stoi(ctx->INTVAL()->getText());
+    TypesMgr::TypeId elementType = getTypeDecor(ctx->basicType());
+    TypesMgr::TypeId t = Types.createArrayTy(size, elementType);
     putTypeDecor(ctx, t);
     DEBUG_EXIT();
 }
@@ -286,13 +305,6 @@ void SymbolsListener::enterLeft_expr(AslParser::Left_exprContext *ctx) {
     DEBUG_ENTER();
 }
 void SymbolsListener::exitLeft_expr(AslParser::Left_exprContext *ctx) {
-    DEBUG_EXIT();
-}
-
-void SymbolsListener::enterArray(AslParser::ArrayContext *ctx) {
-    DEBUG_ENTER();
-}
-void SymbolsListener::exitArray(AslParser::ArrayContext *ctx) {
     DEBUG_EXIT();
 }
 

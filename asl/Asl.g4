@@ -38,8 +38,8 @@ program
         ;
 
 function
-        : FUNC ID '(' params? ')' (':' basicType)? declarations 
-            statements ENDFUNC
+        : FUNC ID '(' params? ')' (':' basicType declarations 
+            statements returnInst | declarations statements)  ENDFUNC
         ;
 params
         : ID ':' type (',' ID ':' type)*
@@ -73,6 +73,10 @@ statements
         : statement*
         ;
 
+returnInst
+        : RETURN (expr) ';'
+        ;
+
 statement
         : left_expr ASSIGN expr ';'                             # assignStmt
         | IF expr THEN statements (ELSE statements)? ENDIF      # ifStmt
@@ -81,7 +85,7 @@ statement
         | READ left_expr ';'                                    # readStmt
         | WRITE expr ';'                                        # writeExpr
         | WRITE STRING ';'                                      # writeString
-        | RETURN (expr)? ';'                                    # returnStmt
+        | returnInst                                            # returnStmt
         ;
 
 expr    
@@ -95,7 +99,7 @@ expr
         | '(' expr ')'                                          # subExpr
         | value                                                 # valueExpr
         | functionCall                                          # procCallExpr
-        | ident ('[' expr ']')?                                 # identExpr
+        | ident_refer                                           # identExpr
         ;
 
 value
@@ -106,6 +110,10 @@ value
         ;
 
 left_expr
+        : ident_refer
+        ;
+
+ident_refer
         : ident ('[' expr ']')?
         ;
 

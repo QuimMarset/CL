@@ -148,7 +148,6 @@ void SymbolsListener::enterType(AslParser::TypeContext *ctx) {
   DEBUG_ENTER();
 }
 void SymbolsListener::exitType(AslParser::TypeContext *ctx) {
-    TypesMgr::TypeId t;
     if (ctx->basicType()) {
         putTypeDecor(ctx, getTypeDecor(ctx->basicType()));
     }

@@ -68,6 +68,9 @@ public:
   void enterParams(AslParser::ParamsContext *ctx);
   void exitParams(AslParser::ParamsContext *ctx);
 
+  void enterReturnInst(AslParser::ReturnInstContext *ctx);
+  void exitReturnInst(AslParser::ReturnInstContext *ctx);
+
   void enterDeclarations(AslParser::DeclarationsContext *ctx);
   void exitDeclarations(AslParser::DeclarationsContext *ctx);
 
@@ -103,6 +106,9 @@ public:
 
   void enterLeft_expr(AslParser::Left_exprContext *ctx);
   void exitLeft_expr(AslParser::Left_exprContext *ctx);
+
+  void enterIdent_refer(AslParser::Ident_referContext *ctx);
+  void exitIdent_refer(AslParser::Ident_referContext *ctx);
 
   void enterUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext *ctx);
   void exitUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext *ctx);

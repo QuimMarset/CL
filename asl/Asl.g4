@@ -74,7 +74,7 @@ statements
         ;
 
 returnInst
-        : RETURN (expr) ';'
+        : RETURN (expr)? ';'
         ;
 
 statement

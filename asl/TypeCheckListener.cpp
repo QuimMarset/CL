@@ -76,7 +76,6 @@ void TypeCheckListener::enterFunction(AslParser::FunctionContext *ctx) {
   Symbols.pushThisScope(sc);
   // Symbols.print();
 }
-//TODO: Return
 void TypeCheckListener::exitFunction(AslParser::FunctionContext *ctx) {
     Symbols.popScope();
     DEBUG_EXIT();
@@ -141,7 +140,6 @@ void TypeCheckListener::exitFunctionCall(AslParser::FunctionCallContext *ctx) {
             for (unsigned int i = 0;i < minSize; ++i) {
                 paramType = getTypeDecor(ctx->expr(i));
                 paramRealType = Types.getParameterType(t1, i);
-                //TODO: Revisar condicio
                 if (not Types.isErrorTy(paramType) and not Types.copyableTypes(paramRealType, paramType)) {
                     Errors.incompatibleParameter(ctx->expr(i), i + 1, ctx);
                 }
@@ -155,10 +153,20 @@ void TypeCheckListener::enterReturnInst(AslParser::ReturnInstContext *ctx) {
     DEBUG_ENTER();
 }
 void TypeCheckListener::exitReturnInst(AslParser::ReturnInstContext *ctx) {
-    TypesMgr::TypeId tExpr = getTypeDecor(ctx->expr());
     TypesMgr::TypeId tFunc = Symbols.getCurrentFunctionTy();
-    if (not Types.isVoidFunction(tFunc) and not Types.copyableTypes(tFunc, tExpr)) {
-        Errors.incompatibleReturn(ctx);
+    TypesMgr::TypeId tFuncRet = Types.getFuncReturnType(tFunc);
+    TypesMgr::TypeId tRet;
+    if (ctx->expr()) {
+        tRet = getTypeDecor(ctx->expr());
+        if (not Types.copyableTypes(tFuncRet, tRet)) {
+            Errors.incompatibleReturn(ctx->expr());
+        }
+    }
+    else {
+        tRet = Types.createVoidTy();
+        if (not Types.copyableTypes(tFuncRet, tRet)) {
+            Errors.incompatibleReturn(ctx);
+        }
     }
     DEBUG_EXIT();
 }
@@ -338,6 +346,7 @@ void TypeCheckListener::exitProcCallExpr(AslParser::ProcCallExprContext *ctx) {
     else if (not Types.isErrorTy(t1) and Types.isFunctionTy(t1)) {
         t1 = Types.getFuncReturnType(t1);
     }
+    //TODO: canviar lo de functionCall?
     else if (not Types.isErrorTy(t1) and not Types.isFunctionTy(t1)) {
         t1 = Types.createErrorTy();
     }

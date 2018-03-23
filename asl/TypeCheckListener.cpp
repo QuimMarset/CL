@@ -147,7 +147,8 @@ void TypeCheckListener::exitFunctionCall(AslParser::FunctionCallContext *ctx) {
             for (unsigned int i = 0;i < minSize; ++i) {
                 paramType = getTypeDecor(ctx->expr(i));
                 paramRealType = Types.getParameterType(t1, i);
-                if (not Types.copyableTypes(paramRealType, paramType)) {
+                //TODO: Revisar condicio
+                if (not Types.isErrorTy(paramType) and not Types.copyableTypes(paramRealType, paramType)) {
                     Errors.incompatibleParameter(ctx->expr(i), i + 1, ctx);
                 }
             }

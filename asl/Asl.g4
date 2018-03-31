@@ -79,7 +79,7 @@ returnInst
 
 statement
         : left_expr ASSIGN expr ';'                             # assignStmt
-        | IF expr THEN statements (ELSE statements)? ENDIF      # ifStmt
+        | IF expr THEN statements elseCond? ENDIF               # ifStmt
         | WHILE expr DO statements ENDWHILE                     # whileStmt
         | functionCall  ';'                                     # procCall
         | READ left_expr ';'                                    # readStmt

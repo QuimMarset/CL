@@ -147,22 +147,33 @@ void CodeGenListener::exitReturnInst(AslParser::ReturnInstContext *ctx) {
     DEBUG_EXIT();
 }
 
-
-//TODO: assignacions elems vector
 void CodeGenListener::enterAssignStmt(AslParser::AssignStmtContext *ctx) {
   DEBUG_ENTER();
 }
 void CodeGenListener::exitAssignStmt(AslParser::AssignStmtContext *ctx) {
-  instructionList  code;
   std::string     addr1 = getAddrDecor(ctx->left_expr());
-  // std::string     offs1 = getOffsetDecor(ctx->left_expr());
+  std::string     offs1 = getOffsetDecor(ctx->left_expr());
   instructionList code1 = getCodeDecor(ctx->left_expr());
-  // TypesMgr::TypeId tid1 = getTypeDecor(ctx->left_expr());
+  TypesMgr::TypeId tid1 = getTypeDecor(ctx->left_expr());
+
   std::string     addr2 = getAddrDecor(ctx->expr());
-  // std::string     offs2 = getOffsetDecor(ctx->expr());
+  std::string     offs2 = getOffsetDecor(ctx->expr());
   instructionList code2 = getCodeDecor(ctx->expr());
-  // TypesMgr::TypeId tid2 = getTypeDecor(ctx->expr());
-  code = code1 || code2 || instruction::LOAD(addr1, addr2);
+  TypesMgr::TypeId tid2 = getTypeDecor(ctx->expr());
+
+  instructionList  code = code2
+  std::string tempR = addr2;
+
+  if (Types.isArrayType(tid2)) {
+      code = code || instruction::XLOAD(tempR, addr2, offs2);
+  }
+  code = code || code1;
+  if (Types.isArrayType(tid1)) {
+      code = code || instruction::LOADX(addr1, offs, tempR)
+  }
+  else {
+      code = code || instruction::LOAD(addr1, tempR);
+  }
   putCodeDecor(ctx, code);
   DEBUG_EXIT();
 }
@@ -237,52 +248,46 @@ void CodeGenListener::enterReadStmt(AslParser::ReadStmtContext *ctx) {
 void CodeGenListener::exitReadStmt(AslParser::ReadStmtContext *ctx) {
   instructionList  code;
   std::string     addr1 = getAddrDecor(ctx->left_expr());
-  // std::string     offs1 = getOffsetDecor(ctx->left_expr());
+  std::string     offs1 = getOffsetDecor(ctx->left_expr());
   instructionList code1 = getCodeDecor(ctx->left_expr());
-  // TypesMgr::TypeId tid1 = getTypeDecor(ctx->left_expr());
-  TypesMgr::TypeId t1 = getTypeDecor(ctx->left_expr());
-  if (Types.isIntegerTy(t1)) {
+  TypesMgr::TypeId tid1 = getTypeDecor(ctx->left_expr());
+  if (Types.isIntegerTy(tid1) or Types.isBooleanTy(tid1)) {
       code = code1 || instruction::READI(addr1);
   }
-  else if (Types.isFloatTy(t1)) {
+  else if (Types.isFloatTy(tid1)) {
       code = code1 || instruction::READF(addr1);
   }
-  else if (Types.isCharacterTy(t1)) {
+  else if (Types.isCharacterTy(tid1)) {
       code = code1 || instruction::READC(addr1);
   }
-  else { //boolean type //TODO: Boolean
-
+  else { //array type
+      
   }
   putCodeDecor(ctx, code);
   DEBUG_EXIT();
 }
-//TODO: char \n \t ...
+
 void CodeGenListener::enterWriteExpr(AslParser::WriteExprContext *ctx) {
   DEBUG_ENTER();
 }
 void CodeGenListener::exitWriteExpr(AslParser::WriteExprContext *ctx) {
     instructionList code;
     std::string     addr1 = getAddrDecor(ctx->expr());
-    // std::string     offs1 = getOffsetDecor(ctx->expr());
     instructionList code1 = getCodeDecor(ctx->expr());
-    // TypesMgr::TypeId tid1 = getTypeDecor(ctx->expr());
     TypesMgr::TypeId t1 = getTypeDecor(ctx->expr());
-    if (Types.isIntegerTy(t1)) {
+    if (Types.isIntegerTy(t1) or Types.isBooleanTy(t1)) {
         code = code1 || instruction::WRITEI(addr1);
     }
     else if (Types.isFloatTy(t1)) {
         code = code1 || instruction::WRITEF(addr1);
     }
-    else if (Types.isCharacterTy(t1)) {
-        if (ctx->expr()->getText() == "\n") {
+    else { //character type
+        if (ctx->expr()->getText() == "\\n") {
             code = code1 || instruction::WRITELN();
         }
         else {
             code = code1 || instruction::WRITEC(addr1);
         }
-    }
-    else { //boolean type //TODO: Boolean
-
     }
     putCodeDecor(ctx, code);
     DEBUG_EXIT();
@@ -539,13 +544,15 @@ void CodeGenListener::enterIdent_refer(AslParser::Ident_referContext *ctx) {
 void CodeGenListener::exitIdent_refer(AslParser::Ident_referContext *ctx) {
     std::string addr = getAddrDecor(ctx->ident());
     instructionList code = instructionList();
+    std::string offset = "";
     if (ctx->expr()) {
         instructionList codeIndex = getCodeDecor(ctx->expr());
         code = code || codeIndex;
+        offset = getOffsetDecor(ctx->expr());
     }
     putAddrDecor(ctx, addr);
     putCodeDecor(ctx, code);
-    putOffsetDecor(ctx, "");
+    putOffsetDecor(ctx, offset);
     DEBUG_EXIT();
 }
 

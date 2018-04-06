@@ -134,6 +134,9 @@ public:
   void enterSubExpr(AslParser::SubExprContext *ctx);
   void exitSubExpr(AslParser::SubExprContext *ctx);
 
+    void enterProcCall(AslParser::ProcCallContext *ctx);
+  void exitProcCall(AslParser::ProcCallContext *ctx);
+
   void enterProcCallExpr(AslParser::ProcCallExprContext *ctx);
   void exitProcCallExpr(AslParser::ProcCallExprContext *ctx);
 

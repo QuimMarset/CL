@@ -88,6 +88,10 @@ statement
         | returnInst                                            # returnStmt
         ;
 
+elseCond:
+        ELSE statements
+        ;
+
 expr    
         : op=(MINUS | PLUS) expr                                # unaryArithmeticExpr
         | expr op=(MUL | DIV | MOD) expr                        # arithmeticExpr

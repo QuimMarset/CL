@@ -70,6 +70,9 @@ public:
   virtual void enterReturnStmt(AslParser::ReturnStmtContext * /*ctx*/) override { }
   virtual void exitReturnStmt(AslParser::ReturnStmtContext * /*ctx*/) override { }
 
+  virtual void enterElseCond(AslParser::ElseCondContext * /*ctx*/) override { }
+  virtual void exitElseCond(AslParser::ElseCondContext * /*ctx*/) override { }
+
   virtual void enterIdentExpr(AslParser::IdentExprContext * /*ctx*/) override { }
   virtual void exitIdentExpr(AslParser::IdentExprContext * /*ctx*/) override { }
 

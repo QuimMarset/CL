@@ -138,15 +138,18 @@ void CodeGenListener::enterReturnInst(AslParser::ReturnInstContext *ctx) {
     DEBUG_ENTER();
 }
 void CodeGenListener::exitReturnInst(AslParser::ReturnInstContext *ctx) {
+    instructionList code;
     if (ctx->expr()) {
 
     }
+    code = code || instruction::RETURN(); //TODO: Colisiona amb la instruccio de la funcio
     DEBUG_EXIT();
 }
 
 void CodeGenListener::enterAssignStmt(AslParser::AssignStmtContext *ctx) {
   DEBUG_ENTER();
 }
+//TODO: Array encara dona problemes
 void CodeGenListener::exitAssignStmt(AslParser::AssignStmtContext *ctx) {
     std::string     addr1 = getAddrDecor(ctx->left_expr());
     std::string     offs1 = getOffsetDecor(ctx->left_expr());
@@ -268,7 +271,7 @@ void CodeGenListener::exitReadStmt(AslParser::ReadStmtContext *ctx) {
     instructionList  code = code1;
     std::string addr2 = addr1;
     bool isArray = false;
-    if (Types.isArrayTy(t1)) {
+    if (Types.isArrayTy(t1)) { //TODO: ...
         isArray = true;
         addr2 = "%" + codeCounters.newTEMP();
         t1 = Types.getArrayElemType(t1);
@@ -294,13 +297,13 @@ void CodeGenListener::enterWriteExpr(AslParser::WriteExprContext *ctx) {
     DEBUG_ENTER();
 }
 void CodeGenListener::exitWriteExpr(AslParser::WriteExprContext *ctx) {
-    std::string     addr1 = getAddrDecor(ctx->expr());
+    std::string addr1 = getAddrDecor(ctx->expr());
     instructionList code1 = getCodeDecor(ctx->expr());
     std::string offs1 = getOffsetDecor(ctx->expr());
     TypesMgr::TypeId t1 = getTypeDecor(ctx->expr());
     instructionList  code = code1;
     std::string addr2 = addr1;
-    if (Types.isArrayTy(t1)) {
+    if (Types.isArrayTy(t1)) { //TODO: Again...
         addr2 = "%" + codeCounters.newTEMP();
         t1 = Types.getArrayElemType(t1);
         code = code || instruction::LOADX(addr2, addr1, offs1);
@@ -406,40 +409,41 @@ void CodeGenListener::exitArithmeticExpr(AslParser::ArithmeticExprContext *ctx) 
     instructionList code2 = getCodeDecor(ctx->expr(1));
     instructionList code  = code1 || code2;
     std::string temp = "%" + codeCounters.newTEMP();
-    instruction instr = instruction::NOOP();
+    instructionList linstr;
     TypesMgr::TypeId t1 = getTypeDecor(ctx->expr(0));
     TypesMgr::TypeId t2 = getTypeDecor(ctx->expr(1));
-    std::string temp1 = addr1;
-    std::string temp2 = addr2;
+    std::string addr3 = addr1;
+    std::string addr4 = addr2;
     bool floatNeeded = Types.isFloatTy(t1) or Types.isFloatTy(t2);
+
     if (floatNeeded and not Types.isFloatTy(t1)) {
-        temp1 = "%" + codeCounters.newTEMP();
-        code = code || instruction::FLOAT(temp1, addr1);
+        addr3 = "%" + codeCounters.newTEMP();
+        code = code || instruction::FLOAT(addr3, addr1);
     }
     else if (floatNeeded and not Types.isFloatTy(t2)) {
-        temp2 = "%" + codeCounters.newTEMP();
-        code = code || instruction::FLOAT(temp2, addr2);
+        addr4 = "%" + codeCounters.newTEMP();
+        code = code || instruction::FLOAT(addr4, addr2);
     }
     if (ctx->PLUS()) {
-        instr = (floatNeeded)? instruction::FADD(temp, temp1, temp2) :
-            instruction::ADD(temp, temp1, temp2);
+        linstr = (floatNeeded)? instruction::FADD(temp, addr3, addr4) :
+            instruction::ADD(temp, addr3, addr4);
     }
     else if (ctx->MINUS()) {
-        instr = (floatNeeded)? instruction::FSUB(temp, temp1, temp2) :
-            instruction::SUB(temp, temp1, temp2);
+        linstr = (floatNeeded)? instruction::FSUB(temp, addr3, addr4) :
+            instruction::SUB(temp, addr3, addr4);
     }
     else if (ctx->MUL()) {
-        instr = (floatNeeded)? instruction::FMUL(temp, temp1, temp2) :
-            instruction::MUL(temp, temp1, temp2);
+        linstr = (floatNeeded)? instruction::FMUL(temp, addr3, addr4) :
+            instruction::MUL(temp, addr3, addr4);
     }
     else if (ctx->DIV()) {
-        instr = (floatNeeded)? instruction::FDIV(temp, temp1, temp2) :
-            instruction::DIV(temp, temp1, temp2);
+        linstr = (floatNeeded)? instruction::FDIV(temp, addr3, addr4) :
+            instruction::DIV(temp, addr3, addr4);
     }
     else { //TODO: MOD
 
     }
-    code = code || instr;
+    code = code || linstr;
     putAddrDecor(ctx, temp);
     putOffsetDecor(ctx, "");
     putCodeDecor(ctx, code);
@@ -456,47 +460,47 @@ void CodeGenListener::exitRelationalExpr(AslParser::RelationalExprContext *ctx) 
     instructionList code2 = getCodeDecor(ctx->expr(1));
     instructionList code  = code1 || code2;
     std::string temp = "%"+codeCounters.newTEMP();
-    std::string temp1 = addr1;
-    std::string temp2 = addr2;
+    std::string addr3 = addr1;
+    std::string addr4 = addr2;
     TypesMgr::TypeId t1 = getTypeDecor(ctx->expr(0));
     TypesMgr::TypeId t2 = getTypeDecor(ctx->expr(1));
     bool floatNeeded = Types.isFloatTy(t1) or Types.isFloatTy(t2);
     instructionList linstr;
 
     if (floatNeeded and not Types.isFloatTy(t1)) {
-        temp1 = "%" + codeCounters.newTEMP();
-        code = code || instruction::FLOAT(temp1, addr1);
+        addr3 = "%" + codeCounters.newTEMP();
+        code = code || instruction::FLOAT(addr3, addr1);
     }
     else if (floatNeeded and not Types.isFloatTy(t2)) {
-        temp2 = "%" + codeCounters.newTEMP();
-        code = code || instruction::FLOAT(temp2, addr2);
+        addr4 = "%" + codeCounters.newTEMP();
+        code = code || instruction::FLOAT(addr4, addr2);
     }
 
     if (ctx->EQ()) {
-        linstr = (floatNeeded)? instruction::FEQ(temp, temp1, temp2) : 
-            instruction::EQ(temp, temp1, temp2);
+        linstr = (floatNeeded)? instruction::FEQ(temp, addr3, addr4) : 
+            instruction::EQ(temp, addr3, addr4);
     }
     else if (ctx->NEQ()) {
         std::string temp3 ="%" + codeCounters.newTEMP();
-        linstr = (floatNeeded)? instruction::FEQ(temp3, temp1, temp2) : 
-            instruction::EQ(temp3, temp1, temp2);
+        linstr = (floatNeeded)? instruction::FEQ(temp3, addr3, addr4) : 
+            instruction::EQ(temp3, addr3, addr4);
         linstr = linstr || instruction::NOT(temp, temp3);
     }
     else if (ctx->GT()) {
-        linstr = (floatNeeded)? instruction::FLT(temp, temp2, temp1) : 
-            instruction::LT(temp, temp2, temp1);
+        linstr = (floatNeeded)? instruction::FLT(temp, addr4, addr3) : 
+            instruction::LT(temp, addr4, addr3);
     }
     else if (ctx->LT()) {
-        linstr = (floatNeeded)? instruction::FLT(temp, temp1, temp2) : 
-            instruction::LT(temp, temp1, temp2);
+        linstr = (floatNeeded)? instruction::FLT(temp, addr3, addr4) : 
+            instruction::LT(temp, addr3, addr4);
     }
     else if (ctx->GET()) {
-        linstr = (floatNeeded)? instruction::FLE(temp, temp2, temp1) : 
-            instruction::LE(temp, temp2, temp1);
+        linstr = (floatNeeded)? instruction::FLE(temp, addr4, addr3) : 
+            instruction::LE(temp, addr4, addr3);
     }
     else { //(ctx->LET())
-        linstr = (floatNeeded)? instruction::FLE(temp, temp1, temp2) : 
-            instruction::LE(temp, temp1, temp2);
+        linstr = (floatNeeded)? instruction::FLE(temp, addr3, addr4) : 
+            instruction::LE(temp, addr3, addr4);
     }
     code = code || linstr;
     putAddrDecor(ctx, temp);
@@ -575,11 +579,10 @@ void CodeGenListener::exitValue(AslParser::ValueContext *ctx) {
         code = instruction::FLOAD(temp, ctx->getText());
     }
     else if (ctx->BOOLVAL()) {
-        std::string tokenText = ctx->getText();
-        std::string val = tokenText;
-        if (tokenText == "true") val = "1";
-        else if (tokenText == "false") val = "0";
-        code = instruction::ILOAD(temp, val); 
+        std::string value = ctx->getText();
+        if (value == "true") value = "1";
+        else value = "0";
+        code = instruction::ILOAD(temp, value); 
     }
     else { //(ctx->CHARVAL())
         code = instruction::CHLOAD(temp, ctx->getText());
@@ -614,11 +617,10 @@ void CodeGenListener::enterIdent_refer(AslParser::Ident_referContext *ctx) {
 }
 void CodeGenListener::exitIdent_refer(AslParser::Ident_referContext *ctx) {
     std::string addr = getAddrDecor(ctx->ident());
-    instructionList code;
-    std::string offset = "";
+    instructionList code = getCodeDecor(ctx->ident());
+    std::string offset = getCodeDecor(ctx->ident());
     if (ctx->expr()) {
-        instructionList codeIndex = getCodeDecor(ctx->expr());
-        code = codeIndex;
+        code = getCodeDecor(ctx->expr());
         offset = getAddrDecor(ctx->expr());
     }
     putAddrDecor(ctx, addr);

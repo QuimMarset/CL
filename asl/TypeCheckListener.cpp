@@ -37,6 +37,7 @@
 #include "../common/SemErrors.h"
 
 #include <iostream>
+#include <algorithm>
 #include <string>
 
 // uncomment the following line to enable debugging messages with DEBUG*
@@ -129,14 +130,14 @@ void TypeCheckListener::exitFunctionCall(AslParser::FunctionCallContext *ctx) {
             Errors.isNotCallable(ctx->ident());
         }
         else {
+            unsigned int numParamsCall = ctx->expr().size();
             unsigned int numParams = Types.getNumOfParameters(t1);
-            if (numParams != ctx->expr().size()) {
+            if (numParams != numParamsCall) {
                 Errors.numberOfParameters(ctx);
             }
             TypesMgr::TypeId paramType;
             TypesMgr::TypeId paramRealType;
-            unsigned int minSize = ctx->expr().size();
-            if (numParams < minSize) minSize = numParams;
+            unsigned int minSize = std::min(numParamsCall, numParams);
             for (unsigned int i = 0;i < minSize; ++i) {
                 paramType = getTypeDecor(ctx->expr(i));
                 paramRealType = Types.getParameterType(t1, i);
@@ -155,18 +156,14 @@ void TypeCheckListener::enterReturnInst(AslParser::ReturnInstContext *ctx) {
 void TypeCheckListener::exitReturnInst(AslParser::ReturnInstContext *ctx) {
     TypesMgr::TypeId tFunc = Symbols.getCurrentFunctionTy();
     TypesMgr::TypeId tFuncRet = Types.getFuncReturnType(tFunc);
-    TypesMgr::TypeId tRet;
-    if (ctx->expr()) {
-        tRet = getTypeDecor(ctx->expr());
-        if (not Types.copyableTypes(tFuncRet, tRet)) {
+    bool expression = ctx->expr();
+    TypesMgr::TypeId tRet = (expression)? getTypeDecor(ctx->expr()) :
+        Types.createVoidTy();
+    if (not Types.copyableTypes(tFuncRet, tRet)) {
+        if (expression)
             Errors.incompatibleReturn(ctx->expr());
-        }
-    }
-    else {
-        tRet = Types.createVoidTy();
-        if (not Types.copyableTypes(tFuncRet, tRet)) {
+        else
             Errors.incompatibleReturn(ctx);
-        }
     }
     DEBUG_EXIT();
 }
@@ -176,12 +173,14 @@ void TypeCheckListener::enterReadStmt(AslParser::ReadStmtContext *ctx) {
 }
 void TypeCheckListener::exitReadStmt(AslParser::ReadStmtContext *ctx) {
     TypesMgr::TypeId t1 = getTypeDecor(ctx->left_expr());
-    if (not Types.isErrorTy(t1) and not Types.isPrimitiveTy(t1) and not Types.isFunctionTy(t1)) {
+    if ((not Types.isErrorTy(t1)) and (not Types.isPrimitiveTy(t1)) and
+        (not Types.isFunctionTy(t1))) {
         Errors.readWriteRequireBasic(ctx);
     }
-    if (not Types.isErrorTy(t1) and not getIsLValueDecor(ctx->left_expr())) {
+    if ((not Types.isErrorTy(t1)) and (not getIsLValueDecor(ctx->left_expr()))) {
         Errors.nonReferenceableExpression(ctx);
     }
+
     DEBUG_EXIT();
 }
 
@@ -207,32 +206,6 @@ void TypeCheckListener::exitLeft_expr(AslParser::Left_exprContext *ctx) {
     DEBUG_EXIT();
 }
 
-void TypeCheckListener::enterIdent_refer(AslParser::Ident_referContext *ctx) {
-  DEBUG_ENTER();
-}
-void TypeCheckListener::exitIdent_refer(AslParser::Ident_referContext *ctx) {
-    TypesMgr::TypeId t1 = getTypeDecor(ctx->ident());
-    if (not Types.isErrorTy(t1)) {
-        if (ctx->expr()) {
-            if (not Types.isArrayTy(t1)) {
-                Errors.nonArrayInArrayAccess(ctx);
-                t1 = Types.createErrorTy();
-            }
-            else {
-                t1 = Types.getArrayElemType(t1);
-            }
-            TypesMgr::TypeId tElem = getTypeDecor(ctx->expr());
-            if (not Types.isIntegerTy(tElem)) {
-                Errors.nonIntegerIndexInArrayAccess(ctx->expr());
-            }
-        }
-    }
-    putTypeDecor(ctx, t1);
-    bool b = getIsLValueDecor(ctx->ident());
-    putIsLValueDecor(ctx, b);
-    DEBUG_EXIT();
-}
-
 void TypeCheckListener::enterUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext *ctx) {
   DEBUG_ENTER();
 }
@@ -253,13 +226,18 @@ void TypeCheckListener::enterArithmeticExpr(AslParser::ArithmeticExprContext *ct
 void TypeCheckListener::exitArithmeticExpr(AslParser::ArithmeticExprContext *ctx) {
     TypesMgr::TypeId t1 = getTypeDecor(ctx->expr(0));
     TypesMgr::TypeId t2 = getTypeDecor(ctx->expr(1));
-    TypesMgr::TypeId t = Types.createIntegerTy();
     if ((not Types.isErrorTy(t1) and not Types.isNumericTy(t1)) or
         (not Types.isErrorTy(t2) and not Types.isNumericTy(t2))) {
             Errors.incompatibleOperator(ctx->op);
-        }
+    }
+    TypesMgr::TypeId t = Types.createIntegerTy();
     if (Types.isFloatTy(t1) or Types.isFloatTy(t2)) {
-        t = Types.createFloatTy();
+        if (ctx->op->getType() == AslParser::MOD) {
+            Errors.incompatibleOperator(ctx->op);
+        }
+        else {
+            t = Types.createFloatTy();
+        }
     }
     putTypeDecor(ctx, t);
     putIsLValueDecor(ctx, false);
@@ -273,7 +251,7 @@ void TypeCheckListener::exitRelationalExpr(AslParser::RelationalExprContext *ctx
     TypesMgr::TypeId t1 = getTypeDecor(ctx->expr(0));
     TypesMgr::TypeId t2 = getTypeDecor(ctx->expr(1));
     std::string oper = ctx->op->getText();
-    if ((not Types.isErrorTy(t1)) and (not Types.isErrorTy(t2)) and
+    if (not Types.isErrorTy(t1) and (not Types.isErrorTy(t2)) and
         (not Types.comparableTypes(t1, t2, oper)))
         Errors.incompatibleOperator(ctx->op);
     TypesMgr::TypeId t = Types.createBooleanTy();
@@ -339,18 +317,14 @@ void TypeCheckListener::enterProcCallExpr(AslParser::ProcCallExprContext *ctx) {
 }
 void TypeCheckListener::exitProcCallExpr(AslParser::ProcCallExprContext *ctx) {
     TypesMgr::TypeId t1 = getTypeDecor(ctx->functionCall()->ident());
+    TypesMgr::TypeId t2 = Types.createErrorTy();
     if (not Types.isErrorTy(t1) and Types.isFunctionTy(t1) and Types.isVoidFunction(t1)) {
         Errors.isNotFunction(ctx);
-        t1 = Types.createVoidTy();
     }
     else if (not Types.isErrorTy(t1) and Types.isFunctionTy(t1)) {
-        t1 = Types.getFuncReturnType(t1);
+        t2 = Types.getFuncReturnType(t1);
     }
-    //TODO: canviar lo de functionCall?
-    else if (not Types.isErrorTy(t1) and not Types.isFunctionTy(t1)) {
-        t1 = Types.createErrorTy();
-    }
-    putTypeDecor(ctx, t1);
+    putTypeDecor(ctx, t2);
     bool b = getIsLValueDecor(ctx->functionCall()->ident());
     putIsLValueDecor(ctx, b);
     DEBUG_EXIT();
@@ -363,6 +337,31 @@ void TypeCheckListener::exitIdentExpr(AslParser::IdentExprContext *ctx) {
     TypesMgr::TypeId t1 = getTypeDecor(ctx->ident_refer());
     putTypeDecor(ctx, t1);
     bool b = getIsLValueDecor(ctx->ident_refer());
+    putIsLValueDecor(ctx, b);
+    DEBUG_EXIT();
+}
+
+void TypeCheckListener::enterIdent_refer(AslParser::Ident_referContext *ctx) {
+  DEBUG_ENTER();
+}
+void TypeCheckListener::exitIdent_refer(AslParser::Ident_referContext *ctx) {
+    TypesMgr::TypeId t1 = getTypeDecor(ctx->ident());
+    if (not Types.isErrorTy(t1) and ctx->expr()) {
+        if (not Types.isArrayTy(t1)) {
+            Errors.nonArrayInArrayAccess(ctx);
+            t1 = Types.createErrorTy();
+        }
+        else {
+            t1 = Types.getArrayElemType(t1);
+        }
+        TypesMgr::TypeId tElem = getTypeDecor(ctx->expr());
+        if (not Types.isIntegerTy(tElem)) {
+            Errors.nonIntegerIndexInArrayAccess(ctx->expr());
+        }
+    
+    }
+    putTypeDecor(ctx, t1);
+    bool b = getIsLValueDecor(ctx->ident());
     putIsLValueDecor(ctx, b);
     DEBUG_EXIT();
 }

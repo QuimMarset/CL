@@ -86,8 +86,8 @@ void SymbolsListener::exitFunction(AslParser::FunctionContext *ctx) {
   else {
     std::vector<TypesMgr::TypeId> lParamsTy;
     if (ctx->params()) {
-        for (unsigned int i = 0;i < ctx->params()->type().size(); ++i) {
-            lParamsTy.push_back(getTypeDecor(ctx->params()->type(i)));
+        for (auto type : ctx->params()->type()) {
+            lParamsTy.push_back(getTypeDecor(type));
         }   
     }
     TypesMgr::TypeId tRet = Types.createVoidTy();
@@ -132,10 +132,10 @@ void SymbolsListener::enterVariable_decl(AslParser::Variable_declContext *ctx) {
 void SymbolsListener::exitVariable_decl(AslParser::Variable_declContext *ctx) {
     TypesMgr::TypeId t = getTypeDecor(ctx->type());
     std::string ident;
-    for (unsigned int i = 0;i < ctx->ID().size();++i) {
-        ident = ctx->ID(i)->getText();
+    for (auto ID : ctx->ID()) {
+        ident = ID->getText();
         if (Symbols.findInCurrentScope(ident)) {
-            Errors.declaredIdent(ctx->ID(i));
+            Errors.declaredIdent(ID);
         }
         else {
             Symbols.addLocalVar(ident, t);

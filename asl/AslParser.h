@@ -24,10 +24,10 @@ public:
 
   enum {
     RuleProgram = 0, RuleFunction = 1, RuleParams = 2, RuleDeclarations = 3, 
-    RuleVariable_decl = 4, RuleType = 5, RuleBasicType = 6, RuleFunctionCall = 7, 
-    RuleStatements = 8, RuleReturnInst = 9, RuleStatement = 10, RuleElseCond = 11, 
-    RuleExpr = 12, RuleValue = 13, RuleLeft_expr = 14, RuleIdent_refer = 15, 
-    RuleIdent = 16, RuleArray = 17
+    RuleVariable_decl = 4, RuleType = 5, RuleBasicType = 6, RuleArray = 7, 
+    RuleFunctionCall = 8, RuleStatements = 9, RuleReturnInst = 10, RuleStatement = 11, 
+    RuleElseCond = 12, RuleExpr = 13, RuleValue = 14, RuleLeft_expr = 15, 
+    RuleIdent_refer = 16, RuleIdent = 17
   };
 
   AslParser(antlr4::TokenStream *input);
@@ -47,6 +47,7 @@ public:
   class Variable_declContext;
   class TypeContext;
   class BasicTypeContext;
+  class ArrayContext;
   class FunctionCallContext;
   class StatementsContext;
   class ReturnInstContext;
@@ -56,8 +57,7 @@ public:
   class ValueContext;
   class Left_exprContext;
   class Ident_referContext;
-  class IdentContext;
-  class ArrayContext; 
+  class IdentContext; 
 
   class  ProgramContext : public antlr4::ParserRuleContext {
   public:
@@ -169,6 +169,22 @@ public:
   };
 
   BasicTypeContext* basicType();
+
+  class  ArrayContext : public antlr4::ParserRuleContext {
+  public:
+    ArrayContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *ARRAY();
+    antlr4::tree::TerminalNode *INTVAL();
+    antlr4::tree::TerminalNode *OF();
+    BasicTypeContext *basicType();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  ArrayContext* array();
 
   class  FunctionCallContext : public antlr4::ParserRuleContext {
   public:
@@ -503,22 +519,6 @@ public:
   };
 
   IdentContext* ident();
-
-  class  ArrayContext : public antlr4::ParserRuleContext {
-  public:
-    ArrayContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *ARRAY();
-    antlr4::tree::TerminalNode *INTVAL();
-    antlr4::tree::TerminalNode *OF();
-    BasicTypeContext *basicType();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  ArrayContext* array();
 
 
   virtual bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;

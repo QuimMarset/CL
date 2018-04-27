@@ -35,6 +35,9 @@ public:
   virtual void enterBasicType(AslParser::BasicTypeContext *ctx) = 0;
   virtual void exitBasicType(AslParser::BasicTypeContext *ctx) = 0;
 
+  virtual void enterArray(AslParser::ArrayContext *ctx) = 0;
+  virtual void exitArray(AslParser::ArrayContext *ctx) = 0;
+
   virtual void enterFunctionCall(AslParser::FunctionCallContext *ctx) = 0;
   virtual void exitFunctionCall(AslParser::FunctionCallContext *ctx) = 0;
 
@@ -109,9 +112,6 @@ public:
 
   virtual void enterIdent(AslParser::IdentContext *ctx) = 0;
   virtual void exitIdent(AslParser::IdentContext *ctx) = 0;
-
-  virtual void enterArray(AslParser::ArrayContext *ctx) = 0;
-  virtual void exitArray(AslParser::ArrayContext *ctx) = 0;
 
 
 };

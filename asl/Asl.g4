@@ -65,6 +65,10 @@ basicType
         | BOOL
         ;
 
+array   
+        : ARRAY '[' INTVAL ']' OF basicType
+        ;
+
 functionCall
         : ident '(' (expr (',' expr)*)? ')'
         ;
@@ -123,10 +127,6 @@ ident_refer
 
 ident
         : ID 
-        ;
-
-array   
-        : ARRAY '[' INTVAL ']' OF basicType
         ;
 
 //////////////////////////////////////////////////

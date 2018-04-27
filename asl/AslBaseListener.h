@@ -37,6 +37,9 @@ public:
   virtual void enterBasicType(AslParser::BasicTypeContext * /*ctx*/) override { }
   virtual void exitBasicType(AslParser::BasicTypeContext * /*ctx*/) override { }
 
+  virtual void enterArray(AslParser::ArrayContext * /*ctx*/) override { }
+  virtual void exitArray(AslParser::ArrayContext * /*ctx*/) override { }
+
   virtual void enterFunctionCall(AslParser::FunctionCallContext * /*ctx*/) override { }
   virtual void exitFunctionCall(AslParser::FunctionCallContext * /*ctx*/) override { }
 
@@ -111,9 +114,6 @@ public:
 
   virtual void enterIdent(AslParser::IdentContext * /*ctx*/) override { }
   virtual void exitIdent(AslParser::IdentContext * /*ctx*/) override { }
-
-  virtual void enterArray(AslParser::ArrayContext * /*ctx*/) override { }
-  virtual void exitArray(AslParser::ArrayContext * /*ctx*/) override { }
 
 
   virtual void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }

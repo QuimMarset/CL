@@ -77,7 +77,10 @@ void CodeGenListener::enterFunction(AslParser::FunctionContext *ctx) {
 void CodeGenListener::exitFunction(AslParser::FunctionContext *ctx) {
   subroutine & subrRef = Code.get_last_subroutine();
   instructionList code = getCodeDecor(ctx->statements());
-  code = code || instruction::RETURN();
+  TypesMgr::TypeId t1 = Symbols.getType(ctx->ID()->getText());
+  if (Types.isVoidFunction(t1)) {
+    code = code || instruction::RETURN();
+  }
   subrRef.set_instructions(code);
   Symbols.popScope();
   DEBUG_EXIT();
@@ -86,9 +89,13 @@ void CodeGenListener::exitFunction(AslParser::FunctionContext *ctx) {
 void CodeGenListener::enterParams(AslParser::ParamsContext *ctx) {
     DEBUG_ENTER();
 }
-//TODO: Param _result?
 void CodeGenListener::exitParams(AslParser::ParamsContext *ctx) {
     subroutine & subr = Code.get_last_subroutine();
+    std::string funcName = subr.get_name();
+    TypesMgr::TypeId t1 = Symbols.getType(funcName);
+    if (!Types.isVoidFunction(t1)) {
+        subr.add_param("_result");
+    }
     for (auto paramID : ctx->ID()) {
         subr.add_param(paramID->getText());
     }
@@ -140,9 +147,11 @@ void CodeGenListener::enterReturnInst(AslParser::ReturnInstContext *ctx) {
 void CodeGenListener::exitReturnInst(AslParser::ReturnInstContext *ctx) {
     instructionList code;
     if (ctx->expr()) {
-
+        code = getCodeDecor(ctx->expr());
+        std::string addr = getAddrDecor(ctx->expr());
+        code = code || instruction::LOAD("_result", addr);
     }
-    code = code || instruction::RETURN(); //TODO: Colisiona amb la instruccio de la funcio
+    code = code || instruction::RETURN();
     DEBUG_EXIT();
 }
 
@@ -315,7 +324,7 @@ void CodeGenListener::exitWriteExpr(AslParser::WriteExprContext *ctx) {
     else if (Types.isFloatTy(t1)) {
         code = code || instruction::WRITEF(addr1);
     }
-    else if (Types.isCharacterTy(t1)) { //TODO: Salts de línia en variables/elems d'array?
+    else if (Types.isCharacterTy(t1)) {
         if (ctx->expr()->getText() == "\'\\n\'") {
             code = code || instruction::WRITELN();
         }

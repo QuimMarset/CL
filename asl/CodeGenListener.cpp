@@ -77,7 +77,7 @@ void CodeGenListener::enterFunction(AslParser::FunctionContext *ctx) {
 void CodeGenListener::exitFunction(AslParser::FunctionContext *ctx) {
   subroutine & subrRef = Code.get_last_subroutine();
   instructionList code = getCodeDecor(ctx->statements());
-  TypesMgr::TypeId t1 = Symbols.getType(ctx->ID()->getText());
+  TypesMgr::TypeId t1 = Symbols.getCurrentFunctionTy();
   if (Types.isVoidFunction(t1)) {
     code = code || instruction::RETURN();
   }
@@ -94,8 +94,7 @@ void CodeGenListener::enterParams(AslParser::ParamsContext *ctx) {
 }
 void CodeGenListener::exitParams(AslParser::ParamsContext *ctx) {
     subroutine & subr = Code.get_last_subroutine();
-    std::string funcName = subr.get_name();
-    TypesMgr::TypeId t1 = Symbols.getType(funcName);
+    TypesMgr::TypeId t1 = Symbols.getCurrentFunctionTy();
     if (!Types.isVoidFunction(t1)) {
         subr.add_param("_result");
     }

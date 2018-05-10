@@ -74,6 +74,9 @@ public:
   void enterReturnInst(AslParser::ReturnInstContext *ctx);
   void exitReturnInst(AslParser::ReturnInstContext *ctx);
 
+  void enterReturnStmt(AslParser::ReturnStmtContext *ctx);
+  void exitReturnStmt(AslParser::ReturnStmtContext *ctx);
+
   void enterDeclarations(AslParser::DeclarationsContext *ctx);
   void exitDeclarations(AslParser::DeclarationsContext *ctx);
 
@@ -91,6 +94,9 @@ public:
 
   void enterIfStmt(AslParser::IfStmtContext *ctx);
   void exitIfStmt(AslParser::IfStmtContext *ctx);
+
+  void enterElseCond(AslParser::ElseCondContext *ctx);
+  void exitElseCond(AslParser::ElseCondContext *ctx);
 
   void enterWhileStmt(AslParser::WhileStmtContext *ctx);
   void exitWhileStmt(AslParser::WhileStmtContext *ctx);
@@ -134,7 +140,7 @@ public:
   void enterSubExpr(AslParser::SubExprContext *ctx);
   void exitSubExpr(AslParser::SubExprContext *ctx);
 
-    void enterProcCall(AslParser::ProcCallContext *ctx);
+  void enterProcCall(AslParser::ProcCallContext *ctx);
   void exitProcCall(AslParser::ProcCallContext *ctx);
 
   void enterProcCallExpr(AslParser::ProcCallExprContext *ctx);

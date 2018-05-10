@@ -170,12 +170,11 @@ void CodeGenListener::exitReturnStmt(AslParser::ReturnStmtContext *ctx) {
 void CodeGenListener::enterAssignStmt(AslParser::AssignStmtContext *ctx) {
   DEBUG_ENTER();
 }
-//TODO: Cutre
 void CodeGenListener::exitAssignStmt(AslParser::AssignStmtContext *ctx) {
     std::string     addr1 = getAddrDecor(ctx->left_expr());
     std::string     offs1 = getOffsetDecor(ctx->left_expr());
     instructionList code1 = getCodeDecor(ctx->left_expr());
-    TypesMgr::TypeId t1 = getTypeDecor(ctx->left_expr());
+    TypesMgr::TypeId t1 = getTypeDecor(ctx->left_expr()->ident_refer()->ident());
 
     std::string     addr2 = getAddrDecor(ctx->expr());
     std::string     offs2 = getOffsetDecor(ctx->expr());
@@ -184,12 +183,8 @@ void CodeGenListener::exitAssignStmt(AslParser::AssignStmtContext *ctx) {
 
     instructionList  code = code2;
     std::string addr3 = addr2;
-    if (!offs2.empty()) {
-        addr3 = "%" + codeCounters.newTEMP();
-        code = code || instruction::LOADX(addr3, addr2, offs2);
-    }
     code = code || code1;
-    if (!offs1.empty()) {
+    if (Types.isArrayTy(t1)) {
         code = code || instruction::XLOAD(addr1, offs1, addr3);
     }
     else {
@@ -314,10 +309,11 @@ void CodeGenListener::exitReadStmt(AslParser::ReadStmtContext *ctx) {
     std::string     offs1 = getOffsetDecor(ctx->left_expr());
     instructionList code1 = getCodeDecor(ctx->left_expr());
     TypesMgr::TypeId t1 = getTypeDecor(ctx->left_expr());
+    TypesMgr::TypeId t2 = getTypeDecor(ctx->left_expr()->ident_refer()->ident());
     instructionList  code = code1;
     std::string addr2 = addr1;
     bool isArray = false;
-    if (!offs1.empty()) { //TODO: Cutre 
+    if (Types.isArrayTy(t2)) {
         isArray = true;
         addr2 = "%" + codeCounters.newTEMP();
     }
@@ -649,7 +645,7 @@ void CodeGenListener::exitIdentExpr(AslParser::IdentExprContext *ctx) {
   std::string offset = getOffsetDecor(ctx->ident_refer());
   instructionList code = getCodeDecor(ctx->ident_refer());
   std::string addr2 = addr;
-  if (!offset.empty()) {
+  if (ctx->ident_refer()->expr()) {
       addr2 = "%" + codeCounters.newTEMP();
       code = code || instruction::LOADX(addr2, addr, offset);
   }
@@ -666,7 +662,8 @@ void CodeGenListener::exitIdent_refer(AslParser::Ident_referContext *ctx) {
     std::string addr = getAddrDecor(ctx->ident());
     instructionList code = getCodeDecor(ctx->ident());
     std::string offset = getOffsetDecor(ctx->ident());
-    if (ctx->expr()) {
+    TypesMgr::TypeId t1 = getTypeDecor(ctx->ident());
+    if (Types.isArrayTy(t1)) {
         if (Symbols.isParameterClass(addr)) {
             std::string addr2 = addr;
             addr = "%" + codeCounters.newTEMP();

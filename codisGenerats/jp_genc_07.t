@@ -26,28 +26,27 @@ function main
    b[%1] = %2
    %4 = 5
    %5 = b[%4]
-   %6 = %5[%4]
    %3 = 7
-   c[%3] = %6
-   %7 = 5
-   %8 = b[%7]
-   writef %8
+   c[%3] = %5
+   %6 = 5
+   %7 = b[%6]
+   writef %7
    writeln
-   %10 = 7
-   %11 = c[%10]
-   writef %11
+   %9 = 7
+   %10 = c[%9]
+   writef %10
    writeln
-   %13 = &b
-   pushparam %13
+   %12 = &b
+   pushparam %12
    call f
    popparam 
-   %14 = 5
-   %15 = b[%14]
-   writef %15
+   %13 = 5
+   %14 = b[%13]
+   writef %14
    writeln
-   %17 = 7
-   %18 = c[%17]
-   writef %18
+   %16 = 7
+   %17 = c[%16]
+   writef %17
    writeln
    return
 endfunction

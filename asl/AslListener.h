@@ -56,8 +56,8 @@ public:
   virtual void enterWhileStmt(AslParser::WhileStmtContext *ctx) = 0;
   virtual void exitWhileStmt(AslParser::WhileStmtContext *ctx) = 0;
 
-  virtual void enterProcCall(AslParser::ProcCallContext *ctx) = 0;
-  virtual void exitProcCall(AslParser::ProcCallContext *ctx) = 0;
+  virtual void enterFunctionCallStmt(AslParser::FunctionCallStmtContext *ctx) = 0;
+  virtual void exitFunctionCallStmt(AslParser::FunctionCallStmtContext *ctx) = 0;
 
   virtual void enterReadStmt(AslParser::ReadStmtContext *ctx) = 0;
   virtual void exitReadStmt(AslParser::ReadStmtContext *ctx) = 0;
@@ -83,14 +83,14 @@ public:
   virtual void enterUnaryBooleanExpr(AslParser::UnaryBooleanExprContext *ctx) = 0;
   virtual void exitUnaryBooleanExpr(AslParser::UnaryBooleanExprContext *ctx) = 0;
 
-  virtual void enterProcCallExpr(AslParser::ProcCallExprContext *ctx) = 0;
-  virtual void exitProcCallExpr(AslParser::ProcCallExprContext *ctx) = 0;
-
   virtual void enterValueExpr(AslParser::ValueExprContext *ctx) = 0;
   virtual void exitValueExpr(AslParser::ValueExprContext *ctx) = 0;
 
   virtual void enterBooleanExpr(AslParser::BooleanExprContext *ctx) = 0;
   virtual void exitBooleanExpr(AslParser::BooleanExprContext *ctx) = 0;
+
+  virtual void enterFunctionCallExpr(AslParser::FunctionCallExprContext *ctx) = 0;
+  virtual void exitFunctionCallExpr(AslParser::FunctionCallExprContext *ctx) = 0;
 
   virtual void enterArithmeticExpr(AslParser::ArithmeticExprContext *ctx) = 0;
   virtual void exitArithmeticExpr(AslParser::ArithmeticExprContext *ctx) = 0;

@@ -85,7 +85,7 @@ statement
         : left_expr ASSIGN expr ';'                             # assignStmt
         | IF expr THEN statements elseCond? ENDIF               # ifStmt
         | WHILE expr DO statements ENDWHILE                     # whileStmt
-        | functionCall  ';'                                     # procCall
+        | functionCall  ';'                                     # functionCallStmt
         | READ left_expr ';'                                    # readStmt
         | WRITE expr ';'                                        # writeExpr
         | WRITE STRING ';'                                      # writeString
@@ -106,7 +106,7 @@ expr
         | expr op=OR expr                                       # booleanExpr
         | '(' expr ')'                                          # subExpr
         | value                                                 # valueExpr
-        | functionCall                                          # procCallExpr
+        | functionCall                                          # functionCallExpr
         | ident_refer                                           # identExpr
         ;
 
@@ -181,7 +181,7 @@ RETURN    : 'return';
 INTVAL    : ('0'..'9')+ ;
 FLOATVAL  : ([0-9]+ ('.' [0-9]+)?) | '.' [0-9]+;
 BOOLVAL   : 'true' | 'false';
-CHARVAL   : '\'' (. | '\\n' | '\\t') '\'';
+CHARVAL   : '\'' (~('\'' | '\\') | ESC_SEQ) '\'';
 
 ID        : ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')* ;
 

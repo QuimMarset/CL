@@ -58,8 +58,8 @@ public:
   virtual void enterWhileStmt(AslParser::WhileStmtContext * /*ctx*/) override { }
   virtual void exitWhileStmt(AslParser::WhileStmtContext * /*ctx*/) override { }
 
-  virtual void enterProcCall(AslParser::ProcCallContext * /*ctx*/) override { }
-  virtual void exitProcCall(AslParser::ProcCallContext * /*ctx*/) override { }
+  virtual void enterFunctionCallStmt(AslParser::FunctionCallStmtContext * /*ctx*/) override { }
+  virtual void exitFunctionCallStmt(AslParser::FunctionCallStmtContext * /*ctx*/) override { }
 
   virtual void enterReadStmt(AslParser::ReadStmtContext * /*ctx*/) override { }
   virtual void exitReadStmt(AslParser::ReadStmtContext * /*ctx*/) override { }
@@ -85,14 +85,14 @@ public:
   virtual void enterUnaryBooleanExpr(AslParser::UnaryBooleanExprContext * /*ctx*/) override { }
   virtual void exitUnaryBooleanExpr(AslParser::UnaryBooleanExprContext * /*ctx*/) override { }
 
-  virtual void enterProcCallExpr(AslParser::ProcCallExprContext * /*ctx*/) override { }
-  virtual void exitProcCallExpr(AslParser::ProcCallExprContext * /*ctx*/) override { }
-
   virtual void enterValueExpr(AslParser::ValueExprContext * /*ctx*/) override { }
   virtual void exitValueExpr(AslParser::ValueExprContext * /*ctx*/) override { }
 
   virtual void enterBooleanExpr(AslParser::BooleanExprContext * /*ctx*/) override { }
   virtual void exitBooleanExpr(AslParser::BooleanExprContext * /*ctx*/) override { }
+
+  virtual void enterFunctionCallExpr(AslParser::FunctionCallExprContext * /*ctx*/) override { }
+  virtual void exitFunctionCallExpr(AslParser::FunctionCallExprContext * /*ctx*/) override { }
 
   virtual void enterArithmeticExpr(AslParser::ArithmeticExprContext * /*ctx*/) override { }
   virtual void exitArithmeticExpr(AslParser::ArithmeticExprContext * /*ctx*/) override { }

@@ -180,7 +180,6 @@ void TypeCheckListener::exitReadStmt(AslParser::ReadStmtContext *ctx) {
     if ((not Types.isErrorTy(t1)) and (not getIsLValueDecor(ctx->left_expr()))) {
         Errors.nonReferenceableExpression(ctx);
     }
-
     DEBUG_EXIT();
 }
 
@@ -199,10 +198,8 @@ void TypeCheckListener::enterLeft_expr(AslParser::Left_exprContext *ctx) {
   DEBUG_ENTER();
 }
 void TypeCheckListener::exitLeft_expr(AslParser::Left_exprContext *ctx) {
-    TypesMgr::TypeId t1 = getTypeDecor(ctx->ident_refer());
-    putTypeDecor(ctx, t1);
-    bool b = getIsLValueDecor(ctx->ident_refer());
-    putIsLValueDecor(ctx, b);
+    putTypeDecor(ctx, getTypeDecor(ctx->ident_refer()));
+    putIsLValueDecor(ctx, getIsLValueDecor(ctx->ident_refer()));
     DEBUG_EXIT();
 }
 
@@ -294,28 +291,24 @@ void TypeCheckListener::enterSubExpr(AslParser::SubExprContext *ctx) {
     DEBUG_ENTER();
 }
 void TypeCheckListener::exitSubExpr(AslParser::SubExprContext *ctx) {
-  TypesMgr::TypeId t1 = getTypeDecor(ctx->expr());
-  putTypeDecor(ctx, t1);
-  bool b = getIsLValueDecor(ctx->expr());
-  putIsLValueDecor(ctx, b);
-  DEBUG_EXIT();
+    putTypeDecor(ctx, getTypeDecor(ctx->expr()));
+    putIsLValueDecor(ctx, getIsLValueDecor(ctx->expr()));
+    DEBUG_EXIT();
 }
 
 void TypeCheckListener::enterValueExpr(AslParser::ValueExprContext *ctx) {
     DEBUG_ENTER();
 }
 void TypeCheckListener::exitValueExpr(AslParser::ValueExprContext *ctx) {
-    TypesMgr::TypeId t1 = getTypeDecor(ctx->value());
-    putTypeDecor(ctx, t1);
-    bool b = getIsLValueDecor(ctx->value());
-    putIsLValueDecor(ctx, b);
+    putTypeDecor(ctx, getTypeDecor(ctx->value()));
+    putIsLValueDecor(ctx, getIsLValueDecor(ctx->value()));
     DEBUG_EXIT();
 }
 
-void TypeCheckListener::enterProcCallExpr(AslParser::ProcCallExprContext *ctx) {
+void TypeCheckListener::enterFunctionCallExpr(AslParser::FunctionCallExprContext *ctx) {
   DEBUG_ENTER();
 }
-void TypeCheckListener::exitProcCallExpr(AslParser::ProcCallExprContext *ctx) {
+void TypeCheckListener::exitFunctionCallExpr(AslParser::FunctionCallExprContext *ctx) {
     TypesMgr::TypeId t1 = getTypeDecor(ctx->functionCall()->ident());
     TypesMgr::TypeId t2 = Types.createErrorTy();
     if (not Types.isErrorTy(t1) and Types.isFunctionTy(t1) and Types.isVoidFunction(t1)) {
@@ -325,24 +318,21 @@ void TypeCheckListener::exitProcCallExpr(AslParser::ProcCallExprContext *ctx) {
         t2 = Types.getFuncReturnType(t1);
     }
     putTypeDecor(ctx, t2);
-    bool b = getIsLValueDecor(ctx->functionCall()->ident());
-    putIsLValueDecor(ctx, b);
+    putIsLValueDecor(ctx, false);
     DEBUG_EXIT();
 }
 
 void TypeCheckListener::enterIdentExpr(AslParser::IdentExprContext *ctx) {
-  DEBUG_ENTER();
+    DEBUG_ENTER();
 }
 void TypeCheckListener::exitIdentExpr(AslParser::IdentExprContext *ctx) {
-    TypesMgr::TypeId t1 = getTypeDecor(ctx->ident_refer());
-    putTypeDecor(ctx, t1);
-    bool b = getIsLValueDecor(ctx->ident_refer());
-    putIsLValueDecor(ctx, b);
+    putTypeDecor(ctx, getTypeDecor(ctx->ident_refer()));
+    putIsLValueDecor(ctx, getIsLValueDecor(ctx->ident_refer()));
     DEBUG_EXIT();
 }
 
 void TypeCheckListener::enterIdent_refer(AslParser::Ident_referContext *ctx) {
-  DEBUG_ENTER();
+    DEBUG_ENTER();
 }
 void TypeCheckListener::exitIdent_refer(AslParser::Ident_referContext *ctx) {
     TypesMgr::TypeId t1 = getTypeDecor(ctx->ident());
@@ -354,11 +344,10 @@ void TypeCheckListener::exitIdent_refer(AslParser::Ident_referContext *ctx) {
         else {
             t1 = Types.getArrayElemType(t1);
         }
-        TypesMgr::TypeId tElem = getTypeDecor(ctx->expr());
-        if (not Types.isIntegerTy(tElem)) {
+        TypesMgr::TypeId tIndex = getTypeDecor(ctx->expr());
+        if (not Types.isIntegerTy(tIndex)) {
             Errors.nonIntegerIndexInArrayAccess(ctx->expr());
         }
-    
     }
     putTypeDecor(ctx, t1);
     bool b = getIsLValueDecor(ctx->ident());

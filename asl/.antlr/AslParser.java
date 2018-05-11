@@ -727,12 +727,6 @@ public class AslParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class ProcCallContext extends StatementContext {
-		public FunctionCallContext functionCall() {
-			return getRuleContext(FunctionCallContext.class,0);
-		}
-		public ProcCallContext(StatementContext ctx) { copyFrom(ctx); }
-	}
 	public static class WriteExprContext extends StatementContext {
 		public TerminalNode WRITE() { return getToken(AslParser.WRITE, 0); }
 		public ExprContext expr() {
@@ -766,6 +760,12 @@ public class AslParser extends Parser {
 			return getRuleContext(ElseCondContext.class,0);
 		}
 		public IfStmtContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class FunctionCallStmtContext extends StatementContext {
+		public FunctionCallContext functionCall() {
+			return getRuleContext(FunctionCallContext.class,0);
+		}
+		public FunctionCallStmtContext(StatementContext ctx) { copyFrom(ctx); }
 	}
 	public static class ReadStmtContext extends StatementContext {
 		public TerminalNode READ() { return getToken(AslParser.READ, 0); }
@@ -861,7 +861,7 @@ public class AslParser extends Parser {
 				}
 				break;
 			case 4:
-				_localctx = new ProcCallContext(_localctx);
+				_localctx = new FunctionCallStmtContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(152);
@@ -995,12 +995,6 @@ public class AslParser extends Parser {
 		public TerminalNode NOT() { return getToken(AslParser.NOT, 0); }
 		public UnaryBooleanExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
-	public static class ProcCallExprContext extends ExprContext {
-		public FunctionCallContext functionCall() {
-			return getRuleContext(FunctionCallContext.class,0);
-		}
-		public ProcCallExprContext(ExprContext ctx) { copyFrom(ctx); }
-	}
 	public static class ValueExprContext extends ExprContext {
 		public ValueContext value() {
 			return getRuleContext(ValueContext.class,0);
@@ -1018,6 +1012,12 @@ public class AslParser extends Parser {
 		public TerminalNode AND() { return getToken(AslParser.AND, 0); }
 		public TerminalNode OR() { return getToken(AslParser.OR, 0); }
 		public BooleanExprContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	public static class FunctionCallExprContext extends ExprContext {
+		public FunctionCallContext functionCall() {
+			return getRuleContext(FunctionCallContext.class,0);
+		}
+		public FunctionCallExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	public static class ArithmeticExprContext extends ExprContext {
 		public Token op;
@@ -1132,7 +1132,7 @@ public class AslParser extends Parser {
 				break;
 			case 5:
 				{
-				_localctx = new ProcCallExprContext(_localctx);
+				_localctx = new FunctionCallExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(182);

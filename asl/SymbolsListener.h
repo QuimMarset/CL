@@ -90,8 +90,8 @@ public:
   void enterWhileStmt(AslParser::WhileStmtContext *ctx);
   void exitWhileStmt(AslParser::WhileStmtContext *ctx);
 
-  void enterProcCall(AslParser::ProcCallContext *ctx);
-  void exitProcCall(AslParser::ProcCallContext *ctx);
+  void enterFunctionCallStmt(AslParser::FunctionCallStmtContext *ctx);
+  void exitFunctionCallStmt(AslParser::FunctionCallStmtContext *ctx);
 
   void enterReadStmt(AslParser::ReadStmtContext *ctx);
   void exitReadStmt(AslParser::ReadStmtContext *ctx);
@@ -120,8 +120,8 @@ public:
   void enterValueExpr(AslParser::ValueExprContext *ctx);
   void exitValueExpr(AslParser::ValueExprContext *ctx);
 
-  void enterProcCallExpr(AslParser::ProcCallExprContext *ctx);
-  void exitProcCallExpr(AslParser::ProcCallExprContext *ctx);
+  void enterFunctionCallExpr(AslParser::FunctionCallExprContext *ctx);
+  void exitFunctionCallExpr(AslParser::FunctionCallExprContext *ctx);
 
   void enterIdentExpr(AslParser::IdentExprContext *ctx);
   void exitIdentExpr(AslParser::IdentExprContext *ctx);

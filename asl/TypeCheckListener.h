@@ -131,8 +131,8 @@ public:
   void enterSubExpr(AslParser::SubExprContext *ctx);
   void exitSubExpr(AslParser::SubExprContext *ctx);
 
-  void enterProcCallExpr(AslParser::ProcCallExprContext *ctx);
-  void exitProcCallExpr(AslParser::ProcCallExprContext *ctx);
+  void enterFunctionCallExpr(AslParser::FunctionCallExprContext *ctx);
+  void exitFunctionCallExpr(AslParser::FunctionCallExprContext *ctx);
 
   void enterIdentExpr(AslParser::IdentExprContext *ctx);
   void exitIdentExpr(AslParser::IdentExprContext *ctx);

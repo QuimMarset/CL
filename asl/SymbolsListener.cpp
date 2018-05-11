@@ -119,13 +119,6 @@ void SymbolsListener::exitParams(AslParser::ParamsContext *ctx) {
     DEBUG_EXIT();
 }
 
-void SymbolsListener::enterDeclarations(AslParser::DeclarationsContext *ctx) {
-  DEBUG_ENTER();
-}
-void SymbolsListener::exitDeclarations(AslParser::DeclarationsContext *ctx) {
-  DEBUG_EXIT();
-}
-
 void SymbolsListener::enterVariable_decl(AslParser::Variable_declContext *ctx) {
   DEBUG_ENTER();
 }
@@ -188,6 +181,13 @@ void SymbolsListener::exitArray(AslParser::ArrayContext *ctx) {
     DEBUG_EXIT();
 }
 
+void SymbolsListener::enterDeclarations(AslParser::DeclarationsContext *ctx) {
+  DEBUG_ENTER();
+}
+void SymbolsListener::exitDeclarations(AslParser::DeclarationsContext *ctx) {
+  DEBUG_EXIT();
+}
+
 void SymbolsListener::enterStatements(AslParser::StatementsContext *ctx) {
   DEBUG_ENTER();
 }
@@ -216,10 +216,10 @@ void SymbolsListener::exitWhileStmt(AslParser::WhileStmtContext *ctx) {
   DEBUG_EXIT();
 }
 
-void SymbolsListener::enterProcCall(AslParser::ProcCallContext *ctx) {
+void SymbolsListener::enterFunctionCallStmt(AslParser::FunctionCallStmtContext *ctx) {
   DEBUG_ENTER();
 }
-void SymbolsListener::exitProcCall(AslParser::ProcCallContext *ctx) {
+void SymbolsListener::exitFunctionCallStmt(AslParser::FunctionCallStmtContext *ctx) {
   DEBUG_EXIT();
 }
 
@@ -286,10 +286,10 @@ void SymbolsListener::exitValueExpr(AslParser::ValueExprContext *ctx) {
   DEBUG_EXIT();
 }
 
-void SymbolsListener::enterProcCallExpr(AslParser::ProcCallExprContext *ctx) {
+void SymbolsListener::enterFunctionCallExpr(AslParser::FunctionCallExprContext *ctx) {
   DEBUG_ENTER();
 }
-void SymbolsListener::exitProcCallExpr(AslParser::ProcCallExprContext *ctx) {
+void SymbolsListener::exitFunctionCallExpr(AslParser::FunctionCallExprContext *ctx) {
   DEBUG_EXIT();
 }
 

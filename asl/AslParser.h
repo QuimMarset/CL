@@ -242,15 +242,6 @@ public:
    
   };
 
-  class  ProcCallContext : public StatementContext {
-  public:
-    ProcCallContext(StatementContext *ctx);
-
-    FunctionCallContext *functionCall();
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-  };
-
   class  WriteExprContext : public StatementContext {
   public:
     WriteExprContext(StatementContext *ctx);
@@ -284,6 +275,15 @@ public:
     StatementsContext *statements();
     antlr4::tree::TerminalNode *ENDIF();
     ElseCondContext *elseCond();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+  };
+
+  class  FunctionCallStmtContext : public StatementContext {
+  public:
+    FunctionCallStmtContext(StatementContext *ctx);
+
+    FunctionCallContext *functionCall();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
@@ -389,15 +389,6 @@ public:
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
-  class  ProcCallExprContext : public ExprContext {
-  public:
-    ProcCallExprContext(ExprContext *ctx);
-
-    FunctionCallContext *functionCall();
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-  };
-
   class  ValueExprContext : public ExprContext {
   public:
     ValueExprContext(ExprContext *ctx);
@@ -416,6 +407,15 @@ public:
     ExprContext* expr(size_t i);
     antlr4::tree::TerminalNode *AND();
     antlr4::tree::TerminalNode *OR();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+  };
+
+  class  FunctionCallExprContext : public ExprContext {
+  public:
+    FunctionCallExprContext(ExprContext *ctx);
+
+    FunctionCallContext *functionCall();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };

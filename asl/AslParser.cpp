@@ -912,24 +912,6 @@ void AslParser::StatementContext::copyFrom(StatementContext *ctx) {
   ParserRuleContext::copyFrom(ctx);
 }
 
-//----------------- ProcCallContext ------------------------------------------------------------------
-
-AslParser::FunctionCallContext* AslParser::ProcCallContext::functionCall() {
-  return getRuleContext<AslParser::FunctionCallContext>(0);
-}
-
-AslParser::ProcCallContext::ProcCallContext(StatementContext *ctx) { copyFrom(ctx); }
-
-void AslParser::ProcCallContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<AslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProcCall(this);
-}
-void AslParser::ProcCallContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<AslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProcCall(this);
-}
 //----------------- WriteExprContext ------------------------------------------------------------------
 
 tree::TerminalNode* AslParser::WriteExprContext::WRITE() {
@@ -1023,6 +1005,24 @@ void AslParser::IfStmtContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<AslListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitIfStmt(this);
+}
+//----------------- FunctionCallStmtContext ------------------------------------------------------------------
+
+AslParser::FunctionCallContext* AslParser::FunctionCallStmtContext::functionCall() {
+  return getRuleContext<AslParser::FunctionCallContext>(0);
+}
+
+AslParser::FunctionCallStmtContext::FunctionCallStmtContext(StatementContext *ctx) { copyFrom(ctx); }
+
+void AslParser::FunctionCallStmtContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<AslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterFunctionCallStmt(this);
+}
+void AslParser::FunctionCallStmtContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<AslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitFunctionCallStmt(this);
 }
 //----------------- ReadStmtContext ------------------------------------------------------------------
 
@@ -1179,7 +1179,7 @@ AslParser::StatementContext* AslParser::statement() {
     }
 
     case 4: {
-      _localctx = dynamic_cast<StatementContext *>(_tracker.createInstance<AslParser::ProcCallContext>(_localctx));
+      _localctx = dynamic_cast<StatementContext *>(_tracker.createInstance<AslParser::FunctionCallStmtContext>(_localctx));
       enterOuterAlt(_localctx, 4);
       setState(152);
       functionCall();
@@ -1380,24 +1380,6 @@ void AslParser::UnaryBooleanExprContext::exitRule(tree::ParseTreeListener *liste
   if (parserListener != nullptr)
     parserListener->exitUnaryBooleanExpr(this);
 }
-//----------------- ProcCallExprContext ------------------------------------------------------------------
-
-AslParser::FunctionCallContext* AslParser::ProcCallExprContext::functionCall() {
-  return getRuleContext<AslParser::FunctionCallContext>(0);
-}
-
-AslParser::ProcCallExprContext::ProcCallExprContext(ExprContext *ctx) { copyFrom(ctx); }
-
-void AslParser::ProcCallExprContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<AslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProcCallExpr(this);
-}
-void AslParser::ProcCallExprContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<AslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProcCallExpr(this);
-}
 //----------------- ValueExprContext ------------------------------------------------------------------
 
 AslParser::ValueContext* AslParser::ValueExprContext::value() {
@@ -1445,6 +1427,24 @@ void AslParser::BooleanExprContext::exitRule(tree::ParseTreeListener *listener) 
   auto parserListener = dynamic_cast<AslListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitBooleanExpr(this);
+}
+//----------------- FunctionCallExprContext ------------------------------------------------------------------
+
+AslParser::FunctionCallContext* AslParser::FunctionCallExprContext::functionCall() {
+  return getRuleContext<AslParser::FunctionCallContext>(0);
+}
+
+AslParser::FunctionCallExprContext::FunctionCallExprContext(ExprContext *ctx) { copyFrom(ctx); }
+
+void AslParser::FunctionCallExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<AslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterFunctionCallExpr(this);
+}
+void AslParser::FunctionCallExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<AslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitFunctionCallExpr(this);
 }
 //----------------- ArithmeticExprContext ------------------------------------------------------------------
 
@@ -1632,7 +1632,7 @@ AslParser::ExprContext* AslParser::expr(int precedence) {
     }
 
     case 5: {
-      _localctx = _tracker.createInstance<ProcCallExprContext>(_localctx);
+      _localctx = _tracker.createInstance<FunctionCallExprContext>(_localctx);
       _ctx = _localctx;
       previousContext = _localctx;
       setState(182);

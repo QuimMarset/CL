@@ -262,11 +262,6 @@ void CodeGenListener::exitFunctionCall(AslParser::FunctionCallContext *ctx) {
     for (unsigned int i = 0; i < ctx->expr().size();++i) {
         code = code || instruction::POP();
     }
-    if (not Types.isVoidFunction(t1)) {
-        std::string temp = "%" + codeCounters.newTEMP();
-        code = code || instruction::POP(temp);
-        putAddrDecor(ctx, temp);
-    }
     putCodeDecor(ctx, code);
     DEBUG_EXIT();
 }
@@ -275,7 +270,12 @@ void CodeGenListener::enterFunctionCallStmt(AslParser::FunctionCallStmtContext *
     DEBUG_ENTER();
 }
 void CodeGenListener::exitFunctionCallStmt(AslParser::FunctionCallStmtContext *ctx) {
-    putCodeDecor(ctx, getCodeDecor(ctx->functionCall()));
+    TypesMgr::TypeId t1 = getTypeDecor(ctx->functionCall()->ident());
+    instructionList code = getCodeDecor(ctx->functionCall());
+    if (not Types.isVoidFunction(t1)) {
+        code = code || instruction::POP();
+    }
+    putCodeDecor(ctx, code);
     DEBUG_EXIT();
 }
 
@@ -609,9 +609,13 @@ void CodeGenListener::enterFunctionCallExpr(AslParser::FunctionCallExprContext *
     DEBUG_ENTER();
 }
 void CodeGenListener::exitFunctionCallExpr(AslParser::FunctionCallExprContext *ctx) {
-    putAddrDecor(ctx, getAddrDecor(ctx->functionCall()));
-    putCodeDecor(ctx, getCodeDecor(ctx->functionCall()));
-    putOffsetDecor(ctx, getOffsetDecor(ctx->functionCall()));
+    instructionList code = getCodeDecor(ctx->functionCall());
+    std::string temp = "%" + codeCounters.newTEMP();
+    std::string offset = getOffsetDecor(ctx->functionCall());
+    code = code || instruction::POP(temp);
+    putAddrDecor(ctx, temp);
+    putCodeDecor(ctx, code);
+    putOffsetDecor(ctx, offset);
     DEBUG_EXIT();
 }
 

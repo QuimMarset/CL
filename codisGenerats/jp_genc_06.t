@@ -74,13 +74,12 @@ function fz
      call f
      popparam 
      popparam 
-     popparam %12
   label endif1 :
-     %13 = 3
-     %14 = r + %13
-     %16 = float %14
-     %15 = %16 *. u
-     _result = %15
+     %12 = 3
+     %13 = r + %12
+     %15 = float %13
+     %14 = %15 *. u
+     _result = %14
      return
 endfunction
 
@@ -107,19 +106,17 @@ function main
    call fz
    popparam 
    popparam 
-   popparam %9
-   pushparam %9
+   pushparam 
    call fz
    popparam 
    popparam 
-   popparam %10
-   q = %10
-   %11 = 3.7
-   %12 = q +. %11
-   %13 = 4
-   %15 = float %13
-   %14 = %12 +. %15
-   writef %14
+   q = 
+   %9 = 3.7
+   %10 = q +. %9
+   %11 = 4
+   %13 = float %11
+   %12 = %10 +. %13
+   writef %12
    writeln
    return
 endfunction

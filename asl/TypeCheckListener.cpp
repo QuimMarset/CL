@@ -311,10 +311,11 @@ void TypeCheckListener::enterFunctionCallExpr(AslParser::FunctionCallExprContext
 void TypeCheckListener::exitFunctionCallExpr(AslParser::FunctionCallExprContext *ctx) {
     TypesMgr::TypeId t1 = getTypeDecor(ctx->functionCall()->ident());
     TypesMgr::TypeId t2 = Types.createErrorTy();
-    if (not Types.isErrorTy(t1) and Types.isFunctionTy(t1) and Types.isVoidFunction(t1)) {
+    bool isFunction = not Types.isErrorTy(t1) and Types.isFunctionTy(t1);
+    if (isFunction and Types.isVoidFunction(t1)) {
         Errors.isNotFunction(ctx);
     }
-    else if (not Types.isErrorTy(t1) and Types.isFunctionTy(t1)) {
+    else if (isFunction) {
         t2 = Types.getFuncReturnType(t1);
     }
     putTypeDecor(ctx, t2);

@@ -1,0 +1,2 @@
+    antlr4::ParserRuleContext *ctxParent = (antlr4::ParserRuleContext *) ctx->parent;
+    std::cout << ctxParent->getText() << " " << getTypeDecor(ctxParent) << std::endl;

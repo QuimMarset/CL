@@ -74,6 +74,7 @@ function fz
      call f
      popparam 
      popparam 
+     popparam 
   label endif1 :
      %12 = 3
      %13 = r + %12
@@ -106,17 +107,19 @@ function main
    call fz
    popparam 
    popparam 
-   pushparam 
+   popparam %9
+   pushparam %9
    call fz
    popparam 
    popparam 
-   q = 
-   %9 = 3.7
-   %10 = q +. %9
-   %11 = 4
-   %13 = float %11
-   %12 = %10 +. %13
-   writef %12
+   popparam %10
+   q = %10
+   %11 = 3.7
+   %12 = q +. %11
+   %13 = 4
+   %15 = float %13
+   %14 = %12 +. %15
+   writef %14
    writeln
    return
 endfunction

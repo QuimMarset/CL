@@ -135,13 +135,13 @@ void TypeCheckListener::exitFunctionCall(AslParser::FunctionCallContext *ctx) {
             if (numParams != numParamsCall) {
                 Errors.numberOfParameters(ctx);
             }
-            TypesMgr::TypeId paramType;
+            TypesMgr::TypeId paramCallType;
             TypesMgr::TypeId paramRealType;
             unsigned int minSize = std::min(numParamsCall, numParams);
             for (unsigned int i = 0;i < minSize; ++i) {
-                paramType = getTypeDecor(ctx->expr(i));
+                paramCallType = getTypeDecor(ctx->expr(i));
                 paramRealType = Types.getParameterType(t1, i);
-                if (not Types.isErrorTy(paramType) and not Types.copyableTypes(paramRealType, paramType)) {
+                if (not Types.isErrorTy(paramCallType) and not Types.copyableTypes(paramRealType, paramCallType)) {
                     Errors.incompatibleParameter(ctx->expr(i), i + 1, ctx);
                 }
             }
@@ -203,15 +203,18 @@ void TypeCheckListener::exitLeft_expr(AslParser::Left_exprContext *ctx) {
     DEBUG_EXIT();
 }
 
-void TypeCheckListener::enterUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext *ctx) {
+void TypeCheckListener::enterUnaryExpr(AslParser::UnaryExprContext *ctx) {
   DEBUG_ENTER();
 }
-void TypeCheckListener::exitUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext *ctx) {
+void TypeCheckListener::exitUnaryExpr(AslParser::UnaryExprContext *ctx) {
     TypesMgr::TypeId t1 = getTypeDecor(ctx->expr());
-    if (not Types.isErrorTy(t1) and not Types.isNumericTy(t1)) {
+    bool opBool = (ctx->op->getType() == AslParser::NOT);
+    if (not Types.isErrorTy(t1) and ( (opBool and not Types.isBooleanTy(t1))
+        or (not opBool and not Types.isNumericTy(t1)) ) ) {
         Errors.incompatibleOperator(ctx->op);
-    }
-    TypesMgr::TypeId t = Types.isFloatTy(t1)? Types.createFloatTy() : Types.createIntegerTy();
+    } 
+    TypesMgr::TypeId t = (opBool)? Types.createBooleanTy() :
+        Types.isFloatTy(t1)? Types.createFloatTy() : Types.createIntegerTy();
     putTypeDecor(ctx, t);
     putIsLValueDecor(ctx, false);
     DEBUG_EXIT();
@@ -248,23 +251,9 @@ void TypeCheckListener::exitRelationalExpr(AslParser::RelationalExprContext *ctx
     TypesMgr::TypeId t1 = getTypeDecor(ctx->expr(0));
     TypesMgr::TypeId t2 = getTypeDecor(ctx->expr(1));
     std::string oper = ctx->op->getText();
-    if (not Types.isErrorTy(t1) and (not Types.isErrorTy(t2)) and
-        (not Types.comparableTypes(t1, t2, oper)))
+    if (not Types.isErrorTy(t1) and not Types.isErrorTy(t2) and
+        not Types.comparableTypes(t1, t2, oper))
         Errors.incompatibleOperator(ctx->op);
-    TypesMgr::TypeId t = Types.createBooleanTy();
-    putTypeDecor(ctx, t);
-    putIsLValueDecor(ctx, false);
-    DEBUG_EXIT();
-}
-
-void TypeCheckListener::enterUnaryBooleanExpr(AslParser::UnaryBooleanExprContext *ctx) {
-    DEBUG_ENTER();
-}
-void TypeCheckListener::exitUnaryBooleanExpr(AslParser::UnaryBooleanExprContext *ctx) {
-    TypesMgr::TypeId t1 = getTypeDecor(ctx->expr());
-    if (not Types.isErrorTy(t1) and not Types.isBooleanTy(t1)) {
-        Errors.incompatibleOperator(ctx->op);
-    }
     TypesMgr::TypeId t = Types.createBooleanTy();
     putTypeDecor(ctx, t);
     putIsLValueDecor(ctx, false);

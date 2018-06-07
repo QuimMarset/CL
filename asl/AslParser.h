@@ -366,25 +366,15 @@ public:
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
-  class  UnaryArithmeticExprContext : public ExprContext {
+  class  UnaryExprContext : public ExprContext {
   public:
-    UnaryArithmeticExprContext(ExprContext *ctx);
-
-    antlr4::Token *op = nullptr;
-    ExprContext *expr();
-    antlr4::tree::TerminalNode *MINUS();
-    antlr4::tree::TerminalNode *PLUS();
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-  };
-
-  class  UnaryBooleanExprContext : public ExprContext {
-  public:
-    UnaryBooleanExprContext(ExprContext *ctx);
+    UnaryExprContext(ExprContext *ctx);
 
     antlr4::Token *op = nullptr;
     ExprContext *expr();
     antlr4::tree::TerminalNode *NOT();
+    antlr4::tree::TerminalNode *MINUS();
+    antlr4::tree::TerminalNode *PLUS();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };

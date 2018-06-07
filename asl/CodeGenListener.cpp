@@ -236,7 +236,6 @@ void CodeGenListener::enterFunctionCall(AslParser::FunctionCallContext *ctx) {
 void CodeGenListener::exitFunctionCall(AslParser::FunctionCallContext *ctx) {
     instructionList code;
     std::string name = ctx->ident()->getText();
-    instructionList codeParam;
     std::string addr;
     TypesMgr::TypeId t1 = getTypeDecor(ctx->ident());
     if (not Types.isVoidFunction(t1)) {
@@ -246,8 +245,7 @@ void CodeGenListener::exitFunctionCall(AslParser::FunctionCallContext *ctx) {
     std::string addr2;
     for (unsigned int i = 0;i < ctx->expr().size(); ++i) {
         auto expr = ctx->expr(i);
-        codeParam = getCodeDecor(expr);
-        code = code || codeParam;
+        code = code || getCodeDecor(expr);
         addr = getAddrDecor(expr);
         t2 = getTypeDecor(expr);
         if (Types.isArrayTy(t2) or (Types.isIntegerTy(t2) and Types.isFloatTy(Types.getParameterType(t1, i)))) {
@@ -387,23 +385,27 @@ void CodeGenListener::exitLeft_expr(AslParser::Left_exprContext *ctx) {
   DEBUG_EXIT();
 }
 
-void CodeGenListener::enterUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext *ctx) {
+void CodeGenListener::enterUnaryExpr(AslParser::UnaryExprContext *ctx) {
     DEBUG_ENTER();
 }
-void CodeGenListener::exitUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext *ctx) {
+void CodeGenListener::exitUnaryExpr(AslParser::UnaryExprContext *ctx) {
     std::string addr1 = getAddrDecor(ctx->expr());
     instructionList code = getCodeDecor(ctx->expr());
     TypesMgr::TypeId t1 = getTypeDecor(ctx->expr());
-    if (ctx->MINUS()) {
-        std::string temp = '%' + codeCounters.newTEMP();
-        instruction instr = (Types.isFloatTy(t1))? instruction::FNEG(temp, addr1) :
-            instruction::NEG(temp, addr1);
+    std::string temp = addr1;
+    if (ctx->MINUS() or ctx->NOT()) {
+        temp = '%' + codeCounters.newTEMP();
+        instruction instr = instruction::NOOP();
+        if (ctx->MINUS()) {
+            instr = (Types.isFloatTy(t1))? instruction::FNEG(temp, addr1) :
+                instruction::NEG(temp, addr1);
+        }
+        else {
+            instr = instruction::NOT(temp, addr1);
+        }
         code = code || instr;
-        putAddrDecor(ctx, temp);
     }
-    else {
-        putAddrDecor(ctx, addr1);
-    }
+    putAddrDecor(ctx, temp);
     putOffsetDecor(ctx, "");
     putCodeDecor(ctx, code);
     DEBUG_EXIT();
@@ -519,20 +521,6 @@ void CodeGenListener::exitRelationalExpr(AslParser::RelationalExprContext *ctx) 
     putAddrDecor(ctx, temp);
     putOffsetDecor(ctx, "");
     putCodeDecor(ctx, code);
-    DEBUG_EXIT();
-}
-
-void CodeGenListener::enterUnaryBooleanExpr(AslParser::UnaryBooleanExprContext *ctx) {
-    DEBUG_ENTER();
-}
-void CodeGenListener::exitUnaryBooleanExpr(AslParser::UnaryBooleanExprContext *ctx) {
-    std::string addr1 = getAddrDecor(ctx->expr());
-    instructionList code1 = getCodeDecor(ctx->expr());
-    std::string temp = "%" + codeCounters.newTEMP();
-    code1 = code1 || instruction::NOT(temp, addr1);
-    putAddrDecor(ctx, temp);
-    putOffsetDecor(ctx, "");
-    putCodeDecor(ctx, code1);
     DEBUG_EXIT();
 }
 

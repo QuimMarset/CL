@@ -119,17 +119,14 @@ public:
   void enterIdent_refer(AslParser::Ident_referContext *ctx);
   void exitIdent_refer(AslParser::Ident_referContext *ctx);
 
-  void enterUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext *ctx);
-  void exitUnaryArithmeticExpr(AslParser::UnaryArithmeticExprContext *ctx);
+  void enterUnaryExpr(AslParser::UnaryExprContext *ctx);
+  void exitUnaryExpr(AslParser::UnaryExprContext *ctx);
 
   void enterArithmeticExpr(AslParser::ArithmeticExprContext *ctx);
   void exitArithmeticExpr(AslParser::ArithmeticExprContext *ctx);
 
   void enterRelationalExpr(AslParser::RelationalExprContext *ctx);
   void exitRelationalExpr(AslParser::RelationalExprContext *ctx);
-
-  void enterUnaryBooleanExpr(AslParser::UnaryBooleanExprContext *ctx);
-  void exitUnaryBooleanExpr(AslParser::UnaryBooleanExprContext *ctx);
 
   void enterBooleanExpr(AslParser::BooleanExprContext *ctx);
   void exitBooleanExpr(AslParser::BooleanExprContext *ctx);

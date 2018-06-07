@@ -97,11 +97,10 @@ elseCond:
         ;
 
 expr    
-        : op=(MINUS | PLUS) expr                                # unaryArithmeticExpr
+        : op=(NOT | MINUS | PLUS) expr                          # unaryExpr
         | expr op=(MUL | DIV | MOD) expr                        # arithmeticExpr
         | expr op=(PLUS | MINUS) expr                           # arithmeticExpr
         | expr op=(EQ | NEQ | GT | LT | LET | GET) expr         # relationalExpr
-        | op=NOT expr                                           # unaryBooleanExpr
         | expr op=AND expr                                      # booleanExpr
         | expr op=OR expr                                       # booleanExpr
         | '(' expr ')'                                          # subExpr

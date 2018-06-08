@@ -161,12 +161,21 @@ void CodeGenListener::exitAssignStmt(AslParser::AssignStmtContext *ctx) {
     std::string     offs1 = getOffsetDecor(ctx->left_expr());
     instructionList code1 = getCodeDecor(ctx->left_expr());
     TypesMgr::TypeId t1 = getTypeDecor(ctx->left_expr()->ident_refer()->ident());
+    TypesMgr::TypeId t2 = getTypeDecor(ctx->left_expr());
 
     std::string     addr2 = getAddrDecor(ctx->expr());
     std::string     offs2 = getOffsetDecor(ctx->expr());
     instructionList code2 = getCodeDecor(ctx->expr());
+    TypesMgr::TypeId t3 = getTypeDecor(ctx->expr());
 
     instructionList  code = code2 || code1;
+
+    if  (Types.isFloatTy(t2) and Types.isIntegerTy(t3)) {
+        std::string addr3 = addr2;
+        addr2 = "%" + codeCounters.newTEMP();
+        code = code || instruction::FLOAT(addr2, addr3);
+    }
+
     if (Types.isArrayTy(t1)) {
         code = code || instruction::XLOAD(addr1, offs1, addr2);
     }

@@ -585,7 +585,8 @@ void CodeGenListener::exitValue(AslParser::ValueContext *ctx) {
         code = instruction::ILOAD(temp, value); 
     }
     else { //(ctx->CHARVAL())
-        code = instruction::CHLOAD(temp, ctx->getText());
+        std::string character = ctx->getText();
+        code = instruction::CHLOAD(temp, character.substr(1, character.size()-2));
     }
     putAddrDecor(ctx, temp);
     putOffsetDecor(ctx, "");

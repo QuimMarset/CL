@@ -164,7 +164,6 @@ void CodeGenListener::exitAssignStmt(AslParser::AssignStmtContext *ctx) {
     TypesMgr::TypeId t2 = getTypeDecor(ctx->left_expr());
 
     std::string     addr2 = getAddrDecor(ctx->expr());
-    std::string     offs2 = getOffsetDecor(ctx->expr());
     instructionList code2 = getCodeDecor(ctx->expr());
     TypesMgr::TypeId t3 = getTypeDecor(ctx->expr());
 
@@ -228,9 +227,9 @@ void CodeGenListener::exitWhileStmt(AslParser::WhileStmtContext *ctx) {
     std::string      addrBoolCond = getAddrDecor(ctx->expr());
     instructionList  codeBoolCond = getCodeDecor(ctx->expr());
     instructionList  codeWhile = getCodeDecor(ctx->statements());
-    std::string baseLabel = codeCounters.newLabelWHILE();
-    std::string labelEndWhile = "endwhile" + baseLabel;
-    std::string labelWhile = "while" + baseLabel;
+    std::string label = codeCounters.newLabelWHILE();
+    std::string labelEndWhile = "endwhile" + label;
+    std::string labelWhile = "while" + label;
     code = instruction::LABEL(labelWhile) || codeBoolCond || 
             instruction::FJUMP(addrBoolCond, labelEndWhile) ||
             codeWhile || instruction::UJUMP(labelWhile) || 
@@ -245,13 +244,12 @@ void CodeGenListener::enterFunctionCall(AslParser::FunctionCallContext *ctx) {
 void CodeGenListener::exitFunctionCall(AslParser::FunctionCallContext *ctx) {
     instructionList code;
     std::string name = ctx->ident()->getText();
-    std::string addr;
     TypesMgr::TypeId t1 = getTypeDecor(ctx->ident());
     if (not Types.isVoidFunction(t1)) {
         code = code || instruction::PUSH();
     }
     TypesMgr::TypeId t2;
-    std::string addr2;
+    std::string addr, addr2;
     for (unsigned int i = 0;i < ctx->expr().size(); ++i) {
         auto expr = ctx->expr(i);
         code = code || getCodeDecor(expr);
@@ -504,7 +502,7 @@ void CodeGenListener::exitRelationalExpr(AslParser::RelationalExprContext *ctx) 
             instruction::EQ(temp, addr3, addr4);
     }
     else if (ctx->NEQ()) {
-        std::string temp3 ="%" + codeCounters.newTEMP();
+        std::string temp3 = "%" + codeCounters.newTEMP();
         linstr = (floatNeeded)? instruction::FEQ(temp3, addr3, addr4) : 
             instruction::EQ(temp3, addr3, addr4);
         linstr = linstr || instruction::NOT(temp, temp3);
@@ -542,7 +540,7 @@ void CodeGenListener::exitBooleanExpr(AslParser::BooleanExprContext *ctx) {
     std::string     addr2 = getAddrDecor(ctx->expr(1));
     instructionList code2 = getCodeDecor(ctx->expr(1));
     instructionList code  = code1 || code2;
-    std::string temp = "%"+codeCounters.newTEMP();
+    std::string temp = "%" + codeCounters.newTEMP();
     if (ctx->AND()) {
         code = code || instruction::AND(temp, addr1, addr2);
     }

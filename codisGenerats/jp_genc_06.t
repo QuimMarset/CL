@@ -91,35 +91,36 @@ function main
   endvars
 
    %1 = 0
-   q = %1
+   %2 = float %1
+   q = %2
    pushparam 
-   %2 = 3
-   %3 = 4
-   %4 = %2 + %3
-   pushparam %4
-   pushparam 
-   %5 = 4444
+   %3 = 3
+   %4 = 4
+   %5 = %3 + %4
    pushparam %5
-   %6 = 2
-   %8 = float %6
-   %7 = q +. %8
-   pushparam %7
-   call fz
-   popparam 
-   popparam 
-   popparam %9
-   pushparam %9
+   pushparam 
+   %6 = 4444
+   pushparam %6
+   %7 = 2
+   %9 = float %7
+   %8 = q +. %9
+   pushparam %8
    call fz
    popparam 
    popparam 
    popparam %10
-   q = %10
-   %11 = 3.7
-   %12 = q +. %11
-   %13 = 4
-   %15 = float %13
-   %14 = %12 +. %15
-   writef %14
+   pushparam %10
+   call fz
+   popparam 
+   popparam 
+   popparam %11
+   q = %11
+   %12 = 3.7
+   %13 = q +. %12
+   %14 = 4
+   %16 = float %14
+   %15 = %13 +. %16
+   writef %15
    writeln
    return
 endfunction

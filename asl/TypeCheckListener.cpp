@@ -326,12 +326,12 @@ void TypeCheckListener::enterIdent_refer(AslParser::Ident_referContext *ctx) {
 }
 void TypeCheckListener::exitIdent_refer(AslParser::Ident_referContext *ctx) {
     TypesMgr::TypeId t1 = getTypeDecor(ctx->ident());
-    if (not Types.isErrorTy(t1) and ctx->expr()) {
-        if (not Types.isArrayTy(t1)) {
+    if (ctx->expr()) {
+        if (not Types.isErrorTy(t1) and not Types.isArrayTy(t1)) {
             Errors.nonArrayInArrayAccess(ctx);
             t1 = Types.createErrorTy();
         }
-        else {
+        else if (not Types.isErrorTy(t1)) {
             t1 = Types.getArrayElemType(t1);
         }
         TypesMgr::TypeId tIndex = getTypeDecor(ctx->expr());

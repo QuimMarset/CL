@@ -1,0 +1,1 @@
+struct { struct { int i, j; double x; } s; char * p; } z;

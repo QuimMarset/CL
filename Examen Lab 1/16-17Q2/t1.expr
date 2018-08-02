@@ -1,0 +1,9 @@
+int i, j, k;
+struct {
+	int a, b;
+	union {
+		char x;
+		int* c;
+	} u;
+} v;
+char* l;

@@ -1,0 +1,22 @@
+
+1)
+. Arbres són de derivació -> arrels són no-terminals i fulles terminals
+. Precedencia ve donada per ordre
+. Lexer aplica les expressions regulars i a partir de l'entrada obtindrà                               
+els tokens
+. Passos -> make antlr
+            make
+
+2)
+. op = Mult  -> serveix per donar nom per recórrer l'arbre
+. listener -> per cada regla (a l'entrar i sortir)
+              classe generada per antlr
+              recorren tot l'arbre
+. visitor -> controlen el recorregut
+
+3)
+. Fills es guarden pel nom o bé del token o de la regla (com amb op)
+  En cas que hi hagi més d'un s'indexa
+
+4)
+. Labels a les alternatives de les regles per definir listeners

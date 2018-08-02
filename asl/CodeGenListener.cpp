@@ -79,7 +79,8 @@ void CodeGenListener::exitFunction(AslParser::FunctionContext *ctx) {
     instructionList code = getCodeDecor(ctx->statements());
     TypesMgr::TypeId t1 = Symbols.getCurrentFunctionTy();
 
-    if (Types.isVoidFunction(t1) and code.back().oper != instruction::Operation::_RETURN)  {
+    if (Types.isVoidFunction(t1) and code.size() > 0 and 
+        code.back().oper != instruction::Operation::_RETURN)  {
         code = code || instruction::RETURN();
     }
     else if (not Types.isVoidFunction(t1)) {
@@ -138,6 +139,14 @@ void CodeGenListener::exitReturnInst(AslParser::ReturnInstContext *ctx) {
     if (ctx->expr()) {
         code = getCodeDecor(ctx->expr());
         std::string addr = getAddrDecor(ctx->expr());
+        TypesMgr::TypeId t2 = getTypeDecor(ctx->expr());
+        TypesMgr::TypeId t1 = Symbols.getCurrentFunctionTy();
+        t1 = Types.getFuncReturnType(t1);
+        if (Types.isFloatTy(t1) and Types.isIntegerTy(t2)) {
+            std::string addr2 = addr;
+            addr = "%" + codeCounters.newTEMP();
+            code = code || instruction::FLOAT(addr, addr2);
+        }
         code = code || instruction::LOAD("_result", addr);
     }
     code = code || instruction::RETURN();
@@ -607,11 +616,10 @@ void CodeGenListener::enterFunctionCallExpr(AslParser::FunctionCallExprContext *
 void CodeGenListener::exitFunctionCallExpr(AslParser::FunctionCallExprContext *ctx) {
     instructionList code = getCodeDecor(ctx->functionCall());
     std::string temp = "%" + codeCounters.newTEMP();
-    std::string offset = getOffsetDecor(ctx->functionCall());
     code = code || instruction::POP(temp);
     putAddrDecor(ctx, temp);
     putCodeDecor(ctx, code);
-    putOffsetDecor(ctx, offset);
+    putOffsetDecor(ctx, "");
     DEBUG_EXIT();
 }
 
@@ -628,7 +636,7 @@ void CodeGenListener::exitIdentExpr(AslParser::IdentExprContext *ctx) {
         code = code || instruction::LOADX(addr2, addr, offset);
     }
     putCodeDecor(ctx, code);
-    putOffsetDecor(ctx, offset);
+    putOffsetDecor(ctx, "");
     putAddrDecor(ctx, addr2);
     DEBUG_EXIT();
 }
